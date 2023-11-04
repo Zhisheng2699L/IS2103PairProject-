@@ -5,12 +5,17 @@
 package ejb.session.stateless;
 
 import entity.PartnerEntity;
+import exceptions.InvalidLoginCredentialException;
+import exceptions.PartnerNotFoundException;
 import exceptions.PartnerUsernameExistException;
 import exceptions.UnknownPersistenceException;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
+import javax.persistence.NonUniqueResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceException;
+import javax.persistence.Query;
 
 /**
  *
@@ -39,8 +44,36 @@ public class PartnerSessionBean implements PartnerSessionBeanRemote, PartnerSess
             }
         }
     }
-
-   
-
     
+    
+    public PartnerEntity retrievePartnerById(Long id) throws PartnerNotFoundException {
+        PartnerEntity partner = em.find(PartnerEntity.class, id);
+        if (partner != null) {
+            return partner;
+        } else {
+            throw new PartnerNotFoundException("Partner id " + id.toString() + " does not exist!");
+        }
+    }
+    
+    public PartnerEntity retrievePartnerByUsername(String username) throws PartnerNotFoundException {
+        Query query = em.createQuery("SELECT p FROM PartnerEntity p WHERE p.username = :username");
+        query.setParameter("username", username);
+
+        try {
+            return (PartnerEntity) query.getSingleResult();
+        } catch (NoResultException | NonUniqueResultException ex) {
+            throw new PartnerNotFoundException("Partner does not exist!");
+        }
+    }
+    
+    
+    public long login(String username, String password) throws InvalidLoginCredentialException, PartnerNotFoundException {
+        PartnerEntity partner = retrievePartnerByUsername(username);
+
+        if (partner.getPassword().equals(password)) {
+            return partner.getUserId();
+        } else {
+            throw new InvalidLoginCredentialException("Invalid login credentials. Please try again.\n");
+        }
+    }  
 }
