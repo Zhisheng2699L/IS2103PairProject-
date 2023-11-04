@@ -38,15 +38,15 @@ public class FlightEntity implements Serializable {
     @Column(nullable = false)
     private boolean disabled;
 
-    @ManyToOne(optional = false, cascade = CascadeType.DETACH)
+    @ManyToOne(optional = false, cascade = CascadeType.PERSIST)
     @JoinColumn(nullable = false)
     private FlightRouteEntity flightRoute;
 
-    @ManyToOne(optional = false, cascade = CascadeType.DETACH)
+    @ManyToOne(optional = false, cascade = CascadeType.PERSIST)
     @JoinColumn(nullable = false)
     private AircraftConfigurationEntity aircraftConfig;
 
-    @OneToMany(mappedBy = "flight", fetch = FetchType.EAGER, cascade = CascadeType.DETACH)
+    @OneToMany(mappedBy = "flight", fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
     private List<FlightSchedulePlanEntity> flightSchedulePlan;
 
     public FlightEntity() {

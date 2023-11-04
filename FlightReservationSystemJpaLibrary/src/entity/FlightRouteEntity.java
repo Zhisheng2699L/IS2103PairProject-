@@ -40,14 +40,14 @@ public class FlightRouteEntity implements Serializable {
     @NotNull
     private boolean disabled;
 
-    @OneToMany(mappedBy = "flightRoute", fetch = FetchType.EAGER, cascade = CascadeType.DETACH)
+    @OneToMany(mappedBy = "flightRoute", fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
     private List<FlightEntity> flights;
 
-    @ManyToOne(cascade = CascadeType.DETACH)
+    @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "origin")
     private AirportEntity origin;
 
-    @ManyToOne(cascade = CascadeType.DETACH)
+    @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "destination")
     private AirportEntity destination;
 
