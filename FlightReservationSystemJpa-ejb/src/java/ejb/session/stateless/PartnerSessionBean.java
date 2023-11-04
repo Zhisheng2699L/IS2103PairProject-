@@ -27,6 +27,7 @@ public class PartnerSessionBean implements PartnerSessionBeanRemote, PartnerSess
     @PersistenceContext(unitName = "FlightReservationSystemJpa-ejbPU")
     private EntityManager em;
     
+    @Override
     public PartnerEntity createNewPartner(PartnerEntity partner) throws PartnerUsernameExistException, UnknownPersistenceException {
         try {
             em.persist(partner);
@@ -45,7 +46,7 @@ public class PartnerSessionBean implements PartnerSessionBeanRemote, PartnerSess
         }
     }
     
-    
+    @Override
     public PartnerEntity retrievePartnerById(Long id) throws PartnerNotFoundException {
         PartnerEntity partner = em.find(PartnerEntity.class, id);
         if (partner != null) {
@@ -55,6 +56,7 @@ public class PartnerSessionBean implements PartnerSessionBeanRemote, PartnerSess
         }
     }
     
+    @Override
     public PartnerEntity retrievePartnerByUsername(String username) throws PartnerNotFoundException {
         Query query = em.createQuery("SELECT p FROM PartnerEntity p WHERE p.username = :username");
         query.setParameter("username", username);
@@ -66,7 +68,7 @@ public class PartnerSessionBean implements PartnerSessionBeanRemote, PartnerSess
         }
     }
     
-    
+    @Override
     public long doLogin(String username, String password) throws InvalidLoginCredentialException, PartnerNotFoundException {
         PartnerEntity partner = retrievePartnerByUsername(username);
 

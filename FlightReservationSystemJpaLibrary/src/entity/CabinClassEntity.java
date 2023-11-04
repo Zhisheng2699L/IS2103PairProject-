@@ -155,8 +155,6 @@ public class CabinClassEntity implements Serializable {
         this.aircraftConfig = aircraftConfig;
     }
     
-    
-    
     public Long getId() {
         return cabinClassId;
     }
