@@ -20,7 +20,6 @@ public class EmployeeSessionBean implements EmployeeSessionBeanRemote, EmployeeS
 
     public EmployeeSessionBean() {
     }
-
     
     @Override
     public EmployeeEntity createNewEmployee(EmployeeEntity newEmployee) throws 
