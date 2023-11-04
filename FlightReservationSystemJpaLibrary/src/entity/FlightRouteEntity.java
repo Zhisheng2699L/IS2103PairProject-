@@ -5,6 +5,7 @@
 package entity;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Cacheable;
 import javax.persistence.CascadeType;
@@ -17,6 +18,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
@@ -34,7 +36,7 @@ public class FlightRouteEntity implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long flightrouteId;
+    private Long flightRouteId;
    
     @Column(nullable = false)
     @NotNull
@@ -50,24 +52,48 @@ public class FlightRouteEntity implements Serializable {
     @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "destination")
     private AirportEntity destination;
-
+    
+    @OneToOne
+    private FlightRouteEntity complementaryRoute;
+    @OneToOne(mappedBy = "complementaryRoute")
+    private FlightRouteEntity originRoute;
+    
     public FlightRouteEntity() {
+        flights = new ArrayList<>();  
+        disabled = false;
     }
 
+    public FlightRouteEntity getComplementaryRoute() {
+        return complementaryRoute;
+    }
+
+    public void setComplementaryRoute(FlightRouteEntity complementaryRoute) {
+        this.complementaryRoute = complementaryRoute;
+    }
+
+    public FlightRouteEntity getOriginRoute() {
+        return originRoute;
+    }
+
+    public void setOriginRoute(FlightRouteEntity originRoute) {
+        this.originRoute = originRoute;
+    }
+
+    
     public FlightRouteEntity(Long flightrouteId, boolean disabled, List<FlightEntity> flights, AirportEntity origin, AirportEntity destination) {
-        this.flightrouteId = flightrouteId;
+        this.flightRouteId = flightrouteId;
         this.disabled = disabled;
         this.flights = flights;
         this.origin = origin;
         this.destination = destination;
     }
     
-    public Long getFlightrouteId() {
-        return flightrouteId;
+    public Long getFlightRouteId() {
+        return flightRouteId;
     }
 
-    public void setFlightrouteId(Long flightrouteId) {
-        this.flightrouteId = flightrouteId;
+    public void setFlightRouteId(Long flightRouteId) {
+        this.flightRouteId = flightRouteId;
     }
 
     public static long getSerialVersionUID() {
@@ -109,7 +135,7 @@ public class FlightRouteEntity implements Serializable {
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (flightrouteId != null ? flightrouteId.hashCode() : 0);
+        hash += (flightRouteId != null ? flightRouteId.hashCode() : 0);
         return hash;
     }
 
@@ -120,7 +146,7 @@ public class FlightRouteEntity implements Serializable {
             return false;
         }
         FlightRouteEntity other = (FlightRouteEntity) object;
-        if ((this.flightrouteId == null && other.flightrouteId != null) || (this.flightrouteId != null && !this.flightrouteId.equals(other.flightrouteId))) {
+        if ((this.flightRouteId == null && other.flightRouteId != null) || (this.flightRouteId != null && !this.flightRouteId.equals(other.flightRouteId))) {
             return false;
         }
         return true;
@@ -128,7 +154,7 @@ public class FlightRouteEntity implements Serializable {
 
     @Override
     public String toString() {
-        return "entity.FlightRouteEntity[ id=" + flightrouteId + " ]";
+        return "entity.FlightRouteEntity[ id=" + flightRouteId + " ]";
     }
     
 }

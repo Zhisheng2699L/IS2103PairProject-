@@ -24,7 +24,7 @@ import javax.persistence.Query;
 @Stateless
 public class EmployeeSessionBean implements EmployeeSessionBeanRemote, EmployeeSessionBeanLocal {
 
-    @PersistenceContext(unitName = "MerlionFlightReservationSystem-ejbPU")
+    @PersistenceContext(unitName = "FlightReservationSystemJpa-ejbPU")
     private EntityManager em;
 
     public EmployeeSessionBean() {
