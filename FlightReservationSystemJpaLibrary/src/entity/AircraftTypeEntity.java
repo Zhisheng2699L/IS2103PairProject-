@@ -39,7 +39,7 @@ public class AircraftTypeEntity implements Serializable {
     @Column(nullable = false, length = 32)
     @NotNull
     @Min(0)
-    private String maxCapacity;
+    private int maxCapacity;
     
     @OneToMany(mappedBy = "aircraftType", fetch = FetchType.EAGER, cascade = CascadeType.DETACH)
     private List<AircraftConfigurationEntity> aircraftConfig;
@@ -48,7 +48,7 @@ public class AircraftTypeEntity implements Serializable {
         aircraftConfig = new ArrayList<>();
     }
 
-    public AircraftTypeEntity(Long aircraftID, String aircraftTypeName, String maxCapacity, List<AircraftConfigurationEntity> aircraftConfig) {
+    public AircraftTypeEntity(Long aircraftID, String aircraftTypeName, int maxCapacity, List<AircraftConfigurationEntity> aircraftConfig) {
         this.aircraftID = aircraftID;
         this.aircraftTypeName = aircraftTypeName;
         this.maxCapacity = maxCapacity;
@@ -71,7 +71,7 @@ public class AircraftTypeEntity implements Serializable {
         this.aircraftTypeName = aircraftTypeName;
     }
 
-    public String getMaxCapacity() {
+    public int getMaxCapacity() {
         return maxCapacity;
     }
 

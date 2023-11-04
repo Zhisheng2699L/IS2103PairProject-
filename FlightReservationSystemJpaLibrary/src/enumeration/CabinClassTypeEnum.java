@@ -9,8 +9,8 @@ package enumeration;
  * @author kahjy
  */
 public enum CabinClassTypeEnum {
-    FIRSTCLASS,
-    BUSINESSCLASS,
-    PREMIUMECONOMYCLASS,
-    ECONOMYCLASS
+    F,
+    J,
+    W,
+    Y
 }
