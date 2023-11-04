@@ -4,6 +4,11 @@
  */
 package ejb.session.stateless;
 
+import entity.AircraftTypeEntity;
+import exceptions.AircraftTypeDoNotExistException;
+import exceptions.AircraftTypeExistException;
+import exceptions.UnknownPersistenceException;
+import java.util.List;
 import javax.ejb.Local;
 
 /**
@@ -13,4 +18,9 @@ import javax.ejb.Local;
 @Local
 public interface AircraftTypeSessionBeanLocal {
     
+    public AircraftTypeEntity createNewAircraftType(AircraftTypeEntity aircraftType) throws AircraftTypeExistException, UnknownPersistenceException;
+    
+    public AircraftTypeEntity retrieveAircraftTypeById(Long id) throws AircraftTypeDoNotExistException;
+
+    public List<AircraftTypeEntity> retrieveAllAircraftType();
 }
