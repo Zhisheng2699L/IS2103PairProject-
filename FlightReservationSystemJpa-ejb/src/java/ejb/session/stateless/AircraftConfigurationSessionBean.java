@@ -8,13 +8,16 @@ import entity.AircraftConfigurationEntity;
 import entity.AircraftTypeEntity;
 import entity.CabinClassEntity;
 import exceptions.AircraftConfigNotFoundException;
+import exceptions.AircraftTypeDoNotExistException;
 import exceptions.CreateNewAircraftConfigErrorException;
+import exceptions.ExistingAircraftConfigException;
 import exceptions.UnknownPersistenceException;
 import java.util.List;
 import javax.annotation.Resource;
 import javax.ejb.EJB;
 import javax.ejb.EJBContext;
 import javax.ejb.Stateless;
+import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
@@ -42,10 +45,10 @@ public class AircraftConfigurationSessionBean implements AircraftConfigurationSe
     @EJB
     private AircraftTypeSessionBeanLocal aircraftTypeSessionBean;
     
-    TransactionAttribute(TransactionAttributeType.REQUIRED)
-
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
+    @Override
     public AircraftConfigurationEntity createNewAircraftConfig(AircraftConfigurationEntity aircraftConfig, long aircraftTypeID, List<CabinClassEntity> cabinClasses) throws 
-            CreateNewAircraftConfigErrorException, AircraftConfigExistException, UnknownPersistenceException {
+            CreateNewAircraftConfigErrorException, AircraftTypeDoNotExistException, UnknownPersistenceException, ExistingAircraftConfigException {
         try {
             em.persist(aircraftConfig);
 
@@ -54,8 +57,8 @@ public class AircraftConfigurationSessionBean implements AircraftConfigurationSe
             aircraftType.getAircraftConfig().add(aircraftConfig);
             aircraftConfig.setAircraftType(aircraftType);
 
-            for (CabinClassEntity cce : cabinClasses) {
-                cabinClassSessionBean.createNewCabinClass(cce, aircraftConfig);
+            for (CabinClassEntity c : cabinClasses) {
+                cabinClassSessionBean.createNewCabinClass(c, aircraftConfig);
             }
 
             int maxCapacity = calculateMaxCapacity(aircraftConfig);
@@ -63,17 +66,17 @@ public class AircraftConfigurationSessionBean implements AircraftConfigurationSe
                 em.flush();
                 return aircraftConfig;
             } else {
-                throw new CreateNewAircraftConfigException("Configuration exceeds maximum capacity of aircraft type");
+                throw new CreateNewAircraftConfigErrorException("Configuration exceeds maximum capacity of aircraft type");
             }
 
-        } catch (CreateNewAircraftConfigException | AircraftTypeNotFoundException ex) {
+        } catch (CreateNewAircraftConfigErrorException | AircraftTypeDoNotExistException ex) {
             eJBContext.setRollbackOnly();
-            throw new CreateNewAircraftConfigException(ex.getMessage());
+            throw new CreateNewAircraftConfigErrorException(ex.getMessage());
         } catch (PersistenceException ex) { 
             eJBContext.setRollbackOnly();
             if (ex.getCause() != null && ex.getCause().getClass().getName().equals("org.eclipse.persistence.exceptions.DatabaseException")) {
                 if (ex.getCause().getCause() != null && ex.getCause().getCause().getClass().getName().equals("java.sql.SQLIntegrityConstraintViolationException")) {
-                    throw new AircraftConfigExistException("Configuration name already exists");
+                    throw new ExistingAircraftConfigException("Aircraft Config name already exist");
                 } else {
                     throw new UnknownPersistenceException(ex.getMessage());
                 }
@@ -83,6 +86,7 @@ public class AircraftConfigurationSessionBean implements AircraftConfigurationSe
         }
     }
     
+    @Override
     public List<AircraftConfigurationEntity> retrieveAllConfiguration() throws AircraftConfigNotFoundException {
         Query query = em.createQuery("SELECT a FROM AircraftConfigurationEntity a ORDER BY a.aircraftType ASC, a.name ASC ");
 
@@ -95,6 +99,7 @@ public class AircraftConfigurationSessionBean implements AircraftConfigurationSe
 
     }
     
+    @Override
     public AircraftConfigurationEntity retrieveAircraftConfigByName(String name) throws AircraftConfigNotFoundException {
         Query query = em.createQuery("SELECT a FROM AircraftConfigurationEntity a WHERE a.name = :name");
         query.setParameter("name", name);
@@ -107,12 +112,9 @@ public class AircraftConfigurationSessionBean implements AircraftConfigurationSe
     }
     
     private int calculateMaxCapacity(AircraftConfigurationEntity aircraftConfig) {
-        int max = 0;
-        System.out.println("Number of cabins: " + aircraftConfig.getCabin().size());
-        for (CabinClassEntity cabin : aircraftConfig.getCabin()) {
-            max += cabin.getMaxSeatCapacity();
-        }
-        System.out.println("/nTesting max: " + max);
-        return max;
+        return aircraftConfig.getCabin()
+                .stream()
+                .mapToInt(CabinClassEntity::getMaxSeatCapacity)
+                .sum();
     }
 }
