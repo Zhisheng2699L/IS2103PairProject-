@@ -3,7 +3,14 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
+<<<<<<< HEAD
             <file>file:/C:/Users/kahjy/Desktop/NUS/y2s1/IS2103/PairProject/IS2103PairProject-/FlightReservationSystemJpaLibrary/src/ejb/session/singleton/DataInitSessionBeanRemote.java</file>
+=======
+            <file>file:/C:/Users/foozh/Desktop/IS2103/IS2103pairProject/FlightReservationSystemJpa/FlightReservationSystemJpa/FlightReservationSystemJpaLibrary/src/entity/FlightScheduleEntity.java</file>
+            <file>file:/C:/Users/foozh/Desktop/IS2103/IS2103pairProject/FlightReservationSystemJpa/FlightReservationSystemJpa/FlightReservationSystemJpaLibrary/src/entity/FlightRouteEntity.java</file>
+            <file>file:/C:/Users/foozh/Desktop/IS2103/IS2103pairProject/FlightReservationSystemJpa/FlightReservationSystemJpa/FlightReservationSystemJpaLibrary/src/entity/FlightEntity.java</file>
+            <file>file:/C:/Users/foozh/Desktop/IS2103/IS2103pairProject/FlightReservationSystemJpa/FlightReservationSystemJpa/FlightReservationSystemJpaLibrary/src/entity/EmployeeEntity.java</file>
+>>>>>>> bf83329962bdd4e8ac97c3f46e8a84705bb99cc1
         </group>
     </open-files>
 </project-private>
