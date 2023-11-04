@@ -5,9 +5,12 @@
 package entity;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -38,9 +41,54 @@ public class AircraftTypeEntity implements Serializable {
     @Min(0)
     private String maxCapacity;
     
-    @OneToMany(mappedBy = "aircraftType")
+    @OneToMany(mappedBy = "aircraftType", fetch = FetchType.EAGER, cascade = CascadeType.DETACH)
     private List<AircraftConfigurationEntity> aircraftConfig;
 
+    public AircraftTypeEntity() {
+        aircraftConfig = new ArrayList<>();
+    }
+
+    public AircraftTypeEntity(Long aircraftID, String aircraftTypeName, String maxCapacity, List<AircraftConfigurationEntity> aircraftConfig) {
+        this.aircraftID = aircraftID;
+        this.aircraftTypeName = aircraftTypeName;
+        this.maxCapacity = maxCapacity;
+        this.aircraftConfig = aircraftConfig;
+    }
+
+    public Long getAircraftID() {
+        return aircraftID;
+    }
+
+    public void setAircraftID(Long aircraftID) {
+        this.aircraftID = aircraftID;
+    }
+
+    public String getAircraftTypeName() {
+        return aircraftTypeName;
+    }
+
+    public void setAircraftTypeName(String aircraftTypeName) {
+        this.aircraftTypeName = aircraftTypeName;
+    }
+
+    public String getMaxCapacity() {
+        return maxCapacity;
+    }
+
+    public void setMaxCapacity(String maxCapacity) {
+        this.maxCapacity = maxCapacity;
+    }
+
+    public List<AircraftConfigurationEntity> getAircraftConfig() {
+        return aircraftConfig;
+    }
+
+    public void setAircraftConfig(List<AircraftConfigurationEntity> aircraftConfig) {
+        this.aircraftConfig = aircraftConfig;
+    }
+
+    
+    
     public Long getId() {
         return aircraftID;
     }
@@ -71,7 +119,7 @@ public class AircraftTypeEntity implements Serializable {
 
     @Override
     public String toString() {
-        return "entity.AircraftTypeEntity[ id=" + id + " ]";
+        return "entity.AircraftTypeEntity[ id=" + aircraftID + " ]";
     }
     
 }
