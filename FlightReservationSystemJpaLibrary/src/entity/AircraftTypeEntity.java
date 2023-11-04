@@ -75,7 +75,7 @@ public class AircraftTypeEntity implements Serializable {
         return maxCapacity;
     }
 
-    public void setMaxCapacity(String maxCapacity) {
+    public void setMaxCapacity(int maxCapacity) {
         this.maxCapacity = maxCapacity;
     }
 
