@@ -40,7 +40,7 @@ public class ReservationEntity implements Serializable {
     @Column(nullable = false, length = 7)
     @NotNull
     @Size(min = 2, max = 10)
-    private String fareBasisCode;
+    private String fareClassCode;
 
     @Column(nullable = false, precision = 11, scale = 2)
     @NotNull
@@ -50,7 +50,7 @@ public class ReservationEntity implements Serializable {
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     @NotNull
-    private CabinClassTypeEnum cabinClassType;
+    private CabinClassTypeEnum cabinClass;
 
     @ManyToOne(optional = false, cascade = CascadeType.PERSIST)
     @JoinColumn(nullable = false)
@@ -69,28 +69,28 @@ public class ReservationEntity implements Serializable {
 
     public ReservationEntity(String fareBasisCode, BigDecimal fareAmount, CabinClassTypeEnum cabinClassType) {
         this();
-        this.fareBasisCode = fareBasisCode;
+        this.fareClassCode = fareBasisCode;
         this.fareAmount = fareAmount;
-        this.cabinClassType = cabinClassType;
+        this.cabinClass = cabinClassType;
     }
 
     public ReservationEntity(Long id, String fareBasisCode, BigDecimal fareAmount, CabinClassTypeEnum cabinClassType, ItineraryEntity itinerary,
             List<PassengerEntity> passenger, FlightScheduleEntity flightSchedule) {
         this.reservationId = id;
-        this.fareBasisCode = fareBasisCode;
+        this.fareClassCode = fareBasisCode;
         this.fareAmount = fareAmount;
-        this.cabinClassType = cabinClassType;
+        this.cabinClass = cabinClassType;
         this.itinerary = itinerary;
         this.passenger = passenger;
         this.flightSchedule = flightSchedule;
     }
     
-    public String getFareBasisCode() {
-        return fareBasisCode;
+    public String getFareClassCode() {
+        return fareClassCode;
     }
 
-    public void setFareBasisCode(String fareBasisCode) {
-        this.fareBasisCode = fareBasisCode;
+    public void setFareClassCode(String fareClassCode) {
+        this.fareClassCode = fareClassCode;
     }
 
     public BigDecimal getFareAmount() {
@@ -101,12 +101,12 @@ public class ReservationEntity implements Serializable {
         this.fareAmount = fareAmount;
     }
 
-    public CabinClassTypeEnum getCabinClassType() {
-        return cabinClassType;
+    public CabinClassTypeEnum getCabinClass() {
+        return cabinClass;
     }
 
-    public void setCabinClassType(CabinClassTypeEnum cabinClassType) {
-        this.cabinClassType = cabinClassType;
+    public void setCabinClass(CabinClassTypeEnum cabinClass) {
+        this.cabinClass = cabinClass;
     }
 
     public ItineraryEntity getItinerary() {
