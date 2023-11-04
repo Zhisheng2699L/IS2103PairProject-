@@ -9,5 +9,10 @@ package enumeration;
  * @author kahjy
  */
 public enum EmployeeAccessRightEnum {
-    
+    ADMINISTRATOR,
+    EMPLOYEE,
+    FLEETMANAGER,
+    ROUTEPLANNER,
+    SCHEDULEMANAGER,
+    SALESMANAGER
 }
