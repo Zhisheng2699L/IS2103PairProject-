@@ -62,6 +62,10 @@ public class AirportEntity implements Serializable {
         this.country = country;
     }
 
+    public AirportEntity(String airport_does_not_exist) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
     public Long getAirportID() {
         return airportID;
     }
