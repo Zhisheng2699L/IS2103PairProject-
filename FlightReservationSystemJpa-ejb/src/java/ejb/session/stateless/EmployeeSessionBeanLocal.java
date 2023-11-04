@@ -4,6 +4,11 @@
  */
 package ejb.session.stateless;
 
+import entity.EmployeeEntity;
+import exceptions.EmployeeDoNotExistException;
+import exceptions.EmployeeUsernameExistException;
+import exceptions.InvalidLoginDetailsException;
+import exceptions.UnknownPersistenceException;
 import javax.ejb.Local;
 
 /**
@@ -13,4 +18,11 @@ import javax.ejb.Local;
 @Local
 public interface EmployeeSessionBeanLocal {
     
+    public EmployeeEntity createNewEmployee(EmployeeEntity newEmployee) throws UnknownPersistenceException, EmployeeUsernameExistException;
+    
+    public EmployeeEntity retrieveEmployeeByUsername (String username) throws EmployeeDoNotExistException;
+    
+    public EmployeeEntity retrieveEmployeeById (Long id) throws EmployeeDoNotExistException;
+    
+    public EmployeeEntity tryLogin(String username, String password) throws InvalidLoginDetailsException;
 }
