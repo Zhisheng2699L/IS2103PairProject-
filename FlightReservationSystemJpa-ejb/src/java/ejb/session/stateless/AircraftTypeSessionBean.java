@@ -22,7 +22,7 @@ import javax.persistence.Query;
 @Stateless
 public class AircraftTypeSessionBean implements AircraftTypeSessionBeanRemote, AircraftTypeSessionBeanLocal {
 
-    @PersistenceContext(unitName = "AircraftTypeSessionBean-ejbPU")
+    @PersistenceContext(unitName = "FlightReservationSystemJpa-ejbPU")
     private EntityManager em;
 
     public AircraftTypeSessionBean() {
