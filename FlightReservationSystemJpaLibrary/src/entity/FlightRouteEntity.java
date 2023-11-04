@@ -120,7 +120,7 @@ public class FlightRouteEntity implements Serializable {
             return false;
         }
         FlightRouteEntity other = (FlightRouteEntity) object;
-        if ((this.flightrouteId == null && other.flightrouteId != null) || (this.FlightrouteId != null && !this.FlightrouteId.equals(other.FlightrouteId))) {
+        if ((this.flightrouteId == null && other.flightrouteId != null) || (this.flightrouteId != null && !this.flightrouteId.equals(other.flightrouteId))) {
             return false;
         }
         return true;
