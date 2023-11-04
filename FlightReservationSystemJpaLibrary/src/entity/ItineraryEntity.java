@@ -25,11 +25,11 @@ import javax.validation.constraints.Size;
  * @author foozh
  */
 @Entity
-public class Itinerary implements Serializable {
+public class ItineraryEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long iternaryId;
     
     @Column(nullable = false, length = 20)
@@ -49,16 +49,16 @@ public class Itinerary implements Serializable {
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "itinerary", cascade = CascadeType.PERSIST)
     private List<ReservationEntity> reservations;
 
-    public Itinerary() {
+    public ItineraryEntity() {
          this.reservations = new ArrayList<>();
     }
 
-    public Itinerary(String creditCardNumber, String cvv) {
+    public ItineraryEntity(String creditCardNumber, String cvv) {
         this.creditCardNumber = creditCardNumber;
         this.cvv = cvv;
     }
 
-    public Itinerary(Long iternaryId, String creditCardNumber, String cvv, UserEntity user, List<ReservationEntity> reservations) {
+    public ItineraryEntity(Long iternaryId, String creditCardNumber, String cvv, UserEntity user, List<ReservationEntity> reservations) {
         this.iternaryId = iternaryId;
         this.creditCardNumber = creditCardNumber;
         this.cvv = cvv;
@@ -116,10 +116,10 @@ public class Itinerary implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the iternaryId fields are not set
-        if (!(object instanceof Itinerary)) {
+        if (!(object instanceof ItineraryEntity)) {
             return false;
         }
-        Itinerary other = (Itinerary) object;
+        ItineraryEntity other = (ItineraryEntity) object;
         if ((this.iternaryId == null && other.iternaryId != null) || (this.iternaryId != null && !this.iternaryId.equals(other.iternaryId))) {
             return false;
         }
