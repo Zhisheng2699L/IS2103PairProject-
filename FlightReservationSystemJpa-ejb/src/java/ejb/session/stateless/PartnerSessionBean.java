@@ -67,7 +67,7 @@ public class PartnerSessionBean implements PartnerSessionBeanRemote, PartnerSess
     }
     
     
-    public long login(String username, String password) throws InvalidLoginCredentialException, PartnerNotFoundException {
+    public long doLogin(String username, String password) throws InvalidLoginCredentialException, PartnerNotFoundException {
         PartnerEntity partner = retrievePartnerByUsername(username);
 
         if (partner.getPassword().equals(password)) {
