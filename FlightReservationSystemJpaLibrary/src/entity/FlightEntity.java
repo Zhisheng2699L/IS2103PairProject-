@@ -124,7 +124,7 @@ public class FlightEntity implements Serializable {
             return false;
         }
         FlightEntity other = (FlightEntity) object;
-        if ((this.flightId == null && other.flightId != null) || (this.FlightId != null && !this.FlightId.equals(other.FlightId))) {
+        if ((this.flightId == null && other.flightId != null) || (this.flightId != null && !this.flightId.equals(other.flightId))) {
             return false;
         }
         return true;
