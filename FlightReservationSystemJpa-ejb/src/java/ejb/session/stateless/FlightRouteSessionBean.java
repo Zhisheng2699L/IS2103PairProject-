@@ -38,12 +38,11 @@ public class FlightRouteSessionBean implements FlightRouteSessionBeanRemote, Fli
          try {
              AirportEntity originAirport = airportSessionBean.retrieveAirportById(originAirportId);
              AirportEntity destinationAirport = airportSessionBean.retrieveAirportById(destinationAirportId);
-             
-             em.persist(flightRoute);
-             
+            
              flightRoute.setOrigin(originAirport);
              flightRoute.setDestination(destinationAirport);
              
+             em.persist(flightRoute);
              em.flush();
              
              return flightRoute;
@@ -64,7 +63,7 @@ public class FlightRouteSessionBean implements FlightRouteSessionBeanRemote, Fli
 
     @Override
     public long setComplementaryFlightRoute(long routeID) throws FlightRouteDoNotExistException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        throw new UnsupportedOperationException("Not supported yet."); 
     }
 
     @Override
@@ -128,7 +127,6 @@ public class FlightRouteSessionBean implements FlightRouteSessionBeanRemote, Fli
         FlightRouteEntity route = retrieveFlightRouteById(flightRouteId);
         if (route.getFlights().isEmpty()) {
             
-            // Disassociation of FK before removal
             if (route.getOriginRoute() != null) {
                 route.getOriginRoute().setComplementaryRoute(null);
                 route.getOriginRoute().setOriginRoute(null);

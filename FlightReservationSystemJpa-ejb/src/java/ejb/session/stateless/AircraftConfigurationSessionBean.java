@@ -100,6 +100,16 @@ public class AircraftConfigurationSessionBean implements AircraftConfigurationSe
     }
     
     @Override
+    public AircraftConfigurationEntity retriveAircraftConfigByID(Long aircraftConfigID) throws AircraftConfigNotFoundException {
+        AircraftConfigurationEntity config = em.find(AircraftConfigurationEntity.class, aircraftConfigID);
+        if (config != null) {
+            return config;
+        } else {
+            throw new AircraftConfigNotFoundException("Aircraft Configuration with " + aircraftConfigID + " does not exist!");
+        }
+    }
+    
+    @Override
     public AircraftConfigurationEntity retrieveAircraftConfigByName(String name) throws AircraftConfigNotFoundException {
         Query query = em.createQuery("SELECT a FROM AircraftConfigurationEntity a WHERE a.name = :name");
         query.setParameter("name", name);
