@@ -41,7 +41,7 @@ public class FareEntity implements Serializable {
     
     @Column(nullable = false, precision = 12, scale = 2)
     @NotNull
-    private BigDecimal fareAmonut;
+    private BigDecimal fareAmount;
     
     @ManyToOne(optional = false, cascade = CascadeType.DETACH)
     @JoinColumn(nullable = false)
@@ -54,7 +54,7 @@ public class FareEntity implements Serializable {
         this.fareId = fareId;
         this.cabinClassType = cabinClassType;
         this.fareBasisCode = fareBasisCode;
-        this.fareAmonut = fareAmonut;
+        this.fareAmount = fareAmonut;
         this.flightSchedulePlan = flightSchedulePlan;
     }
     
@@ -62,7 +62,7 @@ public class FareEntity implements Serializable {
         this();
         this.cabinClassType = cabinClassType;
         this.fareBasisCode = fareBasisCode;
-        this.fareAmonut = fareAmonut;
+        this.fareAmount = fareAmonut;
     }
 
     public Long getFareId() {
@@ -89,12 +89,12 @@ public class FareEntity implements Serializable {
         this.fareBasisCode = fareBasisCode;
     }
 
-    public BigDecimal getFareAmonut() {
-        return fareAmonut;
+    public BigDecimal getFareAmount() {
+        return fareAmount;
     }
 
-    public void setFareAmonut(BigDecimal fareAmonut) {
-        this.fareAmonut = fareAmonut;
+    public void setFareAmount(BigDecimal fareAmount) {
+        this.fareAmount = fareAmount;
     }
 
     public FlightSchedulePlanEntity getFlightSchedulePlan() {
