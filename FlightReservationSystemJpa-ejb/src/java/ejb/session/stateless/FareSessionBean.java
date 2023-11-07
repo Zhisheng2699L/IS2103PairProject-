@@ -86,7 +86,7 @@ public class FareSessionBean implements FareSessionBeanRemote, FareSessionBeanLo
         }
 
         FareEntity fare = retrieveFareById(fareID);
-        fare.setFareAmonut(newCost);
+        fare.setFareAmount(newCost);
         em.flush();
         return fare;    
     }
