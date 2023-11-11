@@ -16,8 +16,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.validation.constraints.Size;
-import static jdk.nashorn.internal.runtime.Debug.id;
 
 /**
  *
@@ -48,6 +48,11 @@ public class FlightEntity implements Serializable {
 
     @OneToMany(mappedBy = "flight", fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
     private List<FlightSchedulePlanEntity> flightSchedulePlan;
+    
+    @OneToOne(cascade = CascadeType.PERSIST)
+    private FlightEntity returnFlight;
+    @OneToOne(mappedBy = "returnFlight", cascade = CascadeType.PERSIST)
+    private FlightEntity originFlight;
 
     public FlightEntity() {
     }
@@ -63,6 +68,22 @@ public class FlightEntity implements Serializable {
     
     public Long getFlightId() {
         return flightId;
+    }
+
+    public FlightEntity getReturnFlight() {
+        return returnFlight;
+    }
+
+    public void setReturnFlight(FlightEntity returnFlight) {
+        this.returnFlight = returnFlight;
+    }
+
+    public FlightEntity getOriginFlight() {
+        return originFlight;
+    }
+
+    public void setOriginFlight(FlightEntity originFlight) {
+        this.originFlight = originFlight;
     }
     
     public String getFlightNum() {
@@ -134,5 +155,7 @@ public class FlightEntity implements Serializable {
     public String toString() {
         return "entity.Flight[ id=" + flightId + " ]";
     }
+    
+ 
     
 }

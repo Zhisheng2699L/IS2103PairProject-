@@ -28,6 +28,8 @@ public interface AircraftConfigurationSessionBeanRemote {
     
     public AircraftConfigurationEntity retrieveAircraftConfigByName(String name) throws AircraftConfigNotFoundException;
     
+    public AircraftConfigurationEntity retriveAircraftConfigByID(Long aircraftConfigID) throws AircraftConfigNotFoundException;
+    
     
     
 }
