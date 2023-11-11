@@ -5,11 +5,16 @@
 package entity;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -34,6 +39,9 @@ public class UserEntity implements Serializable {
     @NotNull
     @Size(min = 1, max = 64)
     private String password;
+    
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "user", cascade = CascadeType.DETACH)
+    private List<ItineraryEntity> itineraries;    
 
     public UserEntity(String username, String password) {
         this.username = username;
@@ -41,6 +49,7 @@ public class UserEntity implements Serializable {
     }
 
     public UserEntity() {
+        this.itineraries = new ArrayList<>();
     }
     
     public Long getUserId() {
@@ -66,8 +75,6 @@ public class UserEntity implements Serializable {
     public void setPassword(String password) {
         this.password = password;
     }
-    
-    
 
     public Long getId() {
         return userId;
@@ -75,6 +82,14 @@ public class UserEntity implements Serializable {
 
     public void setId(Long id) {
         this.userId = id;
+    }
+
+    public List<ItineraryEntity> getItineraries() {
+        return itineraries;
+    }
+
+    public void setItineraries(List<ItineraryEntity> itineraries) {
+        this.itineraries = itineraries;
     }
 
     @Override
