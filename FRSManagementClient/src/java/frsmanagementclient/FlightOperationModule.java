@@ -15,7 +15,6 @@ import java.util.Scanner;
 import javax.validation.Validator;
 import javax.validation.Validation;
 import javax.validation.ValidatorFactory;
-import org.jboss.weld.bootstrap.Validator;
 
 /**
  *
