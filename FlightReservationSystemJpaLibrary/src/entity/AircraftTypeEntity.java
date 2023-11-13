@@ -55,6 +55,11 @@ public class AircraftTypeEntity implements Serializable {
         this.aircraftConfig = aircraftConfig;
     }
 
+    public AircraftTypeEntity(String aircraftTypeName, int maxCapacity) {
+        this.aircraftTypeName = aircraftTypeName;
+        this.maxCapacity = maxCapacity;
+    }
+    
     public Long getAircraftID() {
         return aircraftID;
     }
