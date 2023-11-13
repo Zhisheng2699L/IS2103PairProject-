@@ -13,6 +13,8 @@ import enumeration.CabinClassTypeEnum;
 import exceptions.CabinClassNotFoundException;
 import exceptions.FlightNotFoundException;
 import exceptions.FlightScheduleNotFoundException;
+import exceptions.SeatInventoryNotFoundException;
+import exceptions.UpdateFlightScheduleException;
 import exceptions.ViolationConstraintsException;
 import java.time.Duration;
 import java.util.ArrayList;
@@ -58,6 +60,7 @@ public class FlightScheduleSessionBean implements FlightScheduleSessionBeanRemot
         customValidator = customValidatorFactory.getValidator();
     }
     
+    @Override
     public FlightScheduleEntity createNewSchedule(FlightSchedulePlanEntity flightSchedulePlan, FlightScheduleEntity schedule) throws ViolationConstraintsException {
         Set<ConstraintViolation<FlightScheduleEntity>> constraintViolations = customValidator.validate(schedule);
         if (constraintViolations.isEmpty()) {
@@ -75,6 +78,7 @@ public class FlightScheduleSessionBean implements FlightScheduleSessionBeanRemot
         }
     }
     
+    @Override
     public FlightScheduleEntity retrieveFlightScheduleById(Long flightScheduleID) throws FlightScheduleNotFoundException {
         FlightScheduleEntity schedule = em.find(FlightScheduleEntity.class, flightScheduleID);
         
@@ -86,6 +90,7 @@ public class FlightScheduleSessionBean implements FlightScheduleSessionBeanRemot
         
     }
     
+    @Override
     public FlightScheduleEntity retrieveUnmanagedFlightScheduleById(Long flightScheduleID) throws FlightScheduleNotFoundException {
         FlightScheduleEntity schedule = em.find(FlightScheduleEntity.class, flightScheduleID);
 
@@ -98,6 +103,7 @@ public class FlightScheduleSessionBean implements FlightScheduleSessionBeanRemot
 
     }
     
+    @Override
     public void deleteSchedule(List<FlightScheduleEntity> flightSchedule) {
 
         for (FlightScheduleEntity s : flightSchedule) {
@@ -106,6 +112,7 @@ public class FlightScheduleSessionBean implements FlightScheduleSessionBeanRemot
         }
     }
     
+    @Override
     public List<FlightScheduleEntity> getFlightSchedules(String departure, String destination, Date date, CabinClassTypeEnum cabin) throws FlightNotFoundException {
         List<FlightScheduleEntity> schedule = new ArrayList<>();
         List<FlightEntity> flights = flightSessionBean.retrieveAllFlightByFlightRoute(departure, destination);
@@ -149,7 +156,7 @@ public class FlightScheduleSessionBean implements FlightScheduleSessionBeanRemot
         }
         return false;
     }
-     
+    @Override
     public List<FlightScheduleEntity> getUnManagedFlightSchedules(String departure, String destination, Date date, CabinClassTypeEnum cabin) throws FlightNotFoundException {
         List<FlightScheduleEntity> schedule = new ArrayList<>();
         List<FlightEntity> flights = flightSessionBean.retrieveAllFlightByFlightRoute(departure, destination);
@@ -180,7 +187,7 @@ public class FlightScheduleSessionBean implements FlightScheduleSessionBeanRemot
 
         return filteredSchedules;
     }
-    //its too  complicated to perform abstraction on this one
+   
     public List<Pair<FlightScheduleEntity, FlightScheduleEntity>> getIndirectUnManagedFlightSchedules(
             String departure, String destination, Date date, CabinClassTypeEnum cabin) throws FlightNotFoundException {
         List<Pair<FlightScheduleEntity, FlightScheduleEntity>> schedule = new ArrayList<>();
@@ -278,6 +285,99 @@ public class FlightScheduleSessionBean implements FlightScheduleSessionBeanRemot
         }
         return lowestFare;
     }
+    
+    public FareEntity getHighestUnmanagedFare(FlightScheduleEntity flightScheduleEntity, CabinClassTypeEnum type) throws FlightScheduleNotFoundException,
+            CabinClassNotFoundException {
+        FlightScheduleEntity flightSchedule = retrieveFlightScheduleById(flightScheduleEntity.getFlightScheduleId());
+        List<FareEntity> fares = flightSchedule.getFlightSchedulePlan().getFares();
+        List<FareEntity> ccfares = new ArrayList<>();
+        for (FareEntity fare : fares) {
+            if (fare.getCabinClassType().equals(type)) {
+                ccfares.add(fare);
+            }
+        }
+        if (ccfares.isEmpty()) {
+            throw new CabinClassNotFoundException("Cabin Class not found");
+        }
 
+        FareEntity biggest = ccfares.get(0);
+        for (FareEntity fare : ccfares) {
+            if (fare.getFareAmount().compareTo(biggest.getFareAmount()) > 0) {
+                biggest = fare;
+            }
+        }
+        em.detach(biggest);
+        return biggest;
+    }
 
+    public SeatInventoryEntity getCorrectSeatInventory(FlightScheduleEntity flightSchedule, CabinClassTypeEnum cabinClassType) throws FlightScheduleNotFoundException,
+            SeatInventoryNotFoundException {
+        FlightScheduleEntity flightScheduleEntity = retrieveFlightScheduleById(flightSchedule.getFlightScheduleId());
+        for (SeatInventoryEntity seat : flightScheduleEntity.getSeatInventory()) {
+            if (seat.getCabin().getCabinClassType() == cabinClassType) {
+                return seat;
+            }
+        }
+        throw new SeatInventoryNotFoundException("No such seat inventory");
+    }
+
+    public SeatInventoryEntity getCorrectSeatInventoryUnmanaged(FlightScheduleEntity flightSchedule, CabinClassTypeEnum cabinClassType) throws FlightScheduleNotFoundException,
+            SeatInventoryNotFoundException {
+        FlightScheduleEntity flightScheduleEntity = retrieveFlightScheduleById(flightSchedule.getFlightScheduleId());
+        for (SeatInventoryEntity seat : flightScheduleEntity.getSeatInventory()) {
+            if (seat.getCabin().getCabinClassType() == cabinClassType) {
+                em.detach(seat);
+                return seat;
+            }
+        }
+        throw new SeatInventoryNotFoundException("No such seat inventory");
+    }
+
+    public FlightScheduleEntity updateFlightSchedule(long flightScheduleId, Date newDepartureDateTime, double newFlightDuration) throws FlightScheduleNotFoundException, UpdateFlightScheduleException {
+        FlightScheduleEntity flightSchedule = retrieveFlightScheduleById(flightScheduleId);
+
+        for (FlightSchedulePlanEntity schedulePlan : flightSchedule.getFlightSchedulePlan().getFlight().getFlightSchedulePlan()) {
+            for (FlightScheduleEntity schedule : schedulePlan.getFlightSchedule()) {
+                if (schedule.getFlightScheduleId() == flightScheduleId) {
+                    continue;
+                }
+                Date start1 = schedule.getDepartureDateTime();
+                Date end1 = calculateEndTime(start1, schedule.getDuration());
+                Date end2 = calculateEndTime(newDepartureDateTime, newFlightDuration);
+
+                if (start1.before(end2) && newDepartureDateTime.before(end1)) {
+                    throw new UpdateFlightScheduleException("Conflicts with existing flight schedules");
+                }
+            }
+        }
+
+        flightSchedule.setDepartureDateTime(newDepartureDateTime);
+        flightSchedule.setDuration(newFlightDuration);
+        em.flush();
+        return flightSchedule;
+    }
+    
+    private Date calculateEndTime(Date departureTime, double duration) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(departureTime);
+        int hours = (int) duration;
+        int minutes = (int) (duration % 1 * 60);
+        calendar.add(Calendar.HOUR_OF_DAY, hours);
+        calendar.add(Calendar.MINUTE, minutes);
+        return calendar.getTime();
+    }
+
+    
+    public void deleteFlightSchedule(long flightScheduleId) throws FlightScheduleNotFoundException, UpdateFlightScheduleException {
+        FlightScheduleEntity flightSchedule = retrieveFlightScheduleById(flightScheduleId);
+        if (!flightSchedule.getReservations().isEmpty()) {
+            throw new UpdateFlightScheduleException("Ticket has already been issued, unable to delete");
+        } else {
+            flightSchedule.getFlightSchedulePlan().getFlightSchedule().remove(flightSchedule);
+            for (SeatInventoryEntity seats : flightSchedule.getSeatInventory()) {
+                em.remove(seats);
+            }
+            em.remove(flightSchedule);
+        }
+    }
 }
