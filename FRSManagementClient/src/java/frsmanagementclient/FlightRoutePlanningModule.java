@@ -478,14 +478,18 @@ public class FlightRoutePlanningModule {
                 System.out.println("Complementary return route created and paired!");
             } catch (FlightRouteExistException ex) {
                 System.out.println("Complementary return route already exists and is paired.");
+                 ex.printStackTrace();
             }
         }
         } catch (UnknownPersistenceException | AirportDoNotExistException ex) {
             System.out.println("Error: " + ex.getMessage() + "\nPlease try again!");
+             ex.printStackTrace();
         } catch (FlightRouteExistException ex) {
             System.out.println("Error: Flight route already exists!\nPlease try again!");
+            ex.printStackTrace();
         } catch (FlightRouteDoNotExistException ex) {
             System.out.println("Error: " + ex.getMessage() + "\nPlease try again!");
+             ex.printStackTrace();
         }
     }
   
@@ -498,6 +502,7 @@ public class FlightRoutePlanningModule {
             list = flightRouteSessionBean.retrieveAllFlightRouteInOrder();
         } catch (FlightRouteDoNotExistException ex) {
             System.out.println("Error: " + ex.getMessage() + "\nPlease try again!\n");
+            ex.printStackTrace();
             return;
         }
         
@@ -526,6 +531,7 @@ public class FlightRoutePlanningModule {
             }
         } catch (FlightRouteDoNotExistException ex) {
             System.out.println("Error: " + ex.getMessage() + "\nPlease try again!\n");
+            ex.printStackTrace();
             return;
         }
         System.out.printf("%20s%35s%20s%35s%25s\n", "Flight Route ID", "Origin Airport Name", "Origin Airport IATA", "Destination Airport Name", "Destination Airport IATA");
@@ -542,6 +548,7 @@ public class FlightRoutePlanningModule {
             System.out.println("Flight Route successfully removed!\n");
         } catch (FlightRouteDoNotExistException ex) {
             System.out.println("Error: " + ex.getMessage() + "Flight route not found. \nPlease try again!\n");
+            ex.printStackTrace();
         }
         
         
