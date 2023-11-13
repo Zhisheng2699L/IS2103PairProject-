@@ -12,14 +12,18 @@ import ejb.session.stateless.FlightScheduleSessionBeanRemote;
 import ejb.session.stateless.FlightSessionBeanRemote;
 import entity.AircraftConfigurationEntity;
 import entity.EmployeeEntity;
+import entity.FareEntity;
 import entity.FlightEntity;
 import entity.FlightRouteEntity;
+import entity.FlightScheduleEntity;
+import entity.FlightSchedulePlanEntity;
 import enumeration.EmployeeAccessRightEnum;
 import exceptions.AircraftConfigNotFoundException;
 import exceptions.ExistingFlightException;
 import exceptions.FlightExistException;
 import exceptions.FlightNotFoundException;
 import exceptions.FlightRouteDoNotExistException;
+import exceptions.FlightSchedulePlanDoNotExistException;
 import exceptions.InputDataValidationException;
 import exceptions.UnknownPersistenceException;
 import exceptions.ViolationConstraintsException;
@@ -62,7 +66,7 @@ public class FlightOperationModule {
         this.fareSessionBean = fareSessionBean;
     }
     
-    public void mainMenu() {
+    public void mainMenu() throws ExistingFlightException, FlightRouteDoNotExistException, ViolationConstraintsException, InputDataValidationException, FlightExistException, UnknownPersistenceException, AircraftConfigNotFoundException {
         Scanner sc = new Scanner(System.in);
         int response = 0;
         
@@ -92,7 +96,7 @@ public class FlightOperationModule {
                     }
                 } else if (response == 3) {
                     if (employee.getAccessRight().equals(EmployeeAccessRightEnum.SCHEDULEMANAGER) || employee.getAccessRight().equals(EmployeeAccessRightEnum.ADMINISTRATOR)) {
-                        break();
+                        break;
                 } else {
                         System.out.println("Invalid input. Please enter a valid number.");
                 }
@@ -105,7 +109,17 @@ public class FlightOperationModule {
         System.out.println("End of Details");
     }
         
-    private void flightDetails() {
+    /**
+     *
+     * @throws ExistingFlightException
+     * @throws FlightRouteDoNotExistException
+     * @throws ViolationConstraintsException
+     * @throws InputDataValidationException
+     * @throws FlightExistException
+     * @throws UnknownPersistenceException
+     * @throws AircraftConfigNotFoundException
+     */
+    public void flightDetails() throws ExistingFlightException, FlightRouteDoNotExistException, ViolationConstraintsException, InputDataValidationException, FlightExistException, UnknownPersistenceException, AircraftConfigNotFoundException {
         Scanner sc = new Scanner(System.in);
         int choice = 0;
         
@@ -140,7 +154,7 @@ public class FlightOperationModule {
     
     /*--------------------------------------------------- DO CREATE FLIGHT () ----------------------------------------------------------------------------*/
 
-    private void doCreateFlight() throws ExistingFlightException, FlightRouteDoNotExistException, ViolationConstraintsException, InputDataValidationException, UnknownPersistenceException, AircraftConfigNotFoundException, FlightExistException {
+    private void createNewflight() throws ExistingFlightException, FlightRouteDoNotExistException, ViolationConstraintsException, InputDataValidationException, UnknownPersistenceException, AircraftConfigNotFoundException, FlightExistException {
         FlightEntity flight;
         long chosenRoute, chosenConfig;
         String flightNum;
@@ -230,6 +244,80 @@ public class FlightOperationModule {
             }
         }
     }
+    
+
+/*---------------------------------- VIEW ALL FLIGHTS ----------------------------------*/    
+    private void viewAllFlights() {
+        System.out.println("===== View All Flights Schedule ======");
+
+        try {
+            List<FlightSchedulePlanEntity> list = flightSchedulePlanSessionBean.retrieveAllFlightSchedulePlan();
+            printFlightSchedulePlanList(list);
+        } catch (FlightSchedulePlanDoNotExistException ex) {
+            System.out.println("Error: " + ex.getMessage() + "\n");
+        }
+
+        waitForEnterKeyPress();
+    }
+
+    private void printFlightSchedulePlanList(List<FlightSchedulePlanEntity> list) {
+        System.out.printf("%10s%15s%20s%40s%30s\n", "Plan Id", "Flight Number", "Type Plan", "Recurrent End Date", "Number of Flight Schedule");
+        for (FlightSchedulePlanEntity plan : list) {
+            System.out.printf("%10s%15s%20s%40s%30s\n", plan.getFlightSchedulePlanId(), plan.getFlightNum(), plan.getTypeExistingInPlan(), plan.getRecurringEndDate(), plan.getFlightSchedule().size());
+        }
+    }
+
+    private void waitForEnterKeyPress() {
+        Scanner sc = new Scanner(System.in);
+        System.out.print("Press Enter key to continue...> ");
+        sc.nextLine();
+    }
+
+/*---------------------------------- END OF VIEW ALL FLIGHTS ----------------------------------*/    
+    
+    
+    private void doViewFlightSchedulePlanDetails() {
+        try {
+            Scanner sc = new Scanner(System.in);
+            int response = 0;
+            System.out.println("===== View Flight Schedule Plan details =====");
+            System.out.print("Enter Flight Schedule Plan ID> ");
+            Long id = sc.nextLong();
+            
+            FlightSchedulePlanEntity plan = flightSchedulePlanSessionBean.retrieveFlightSchedulePlanEntityById(id);
+            FlightEntity flight = plan.getFlight();
+            FlightRouteEntity route = flight.getFlightRoute();
+            List<FlightScheduleEntity> schedule = plan.getFlightSchedule();
+            List<FareEntity> fare = plan.getFares();          
+            
+            System.out.printf("%10s%15s%20s%25s%30s%25s%40s%40s%20s%30s\n", "Plan ID", "Flight Number", "Type Plan", "Flight Schedule ID", "Departure Date", "Duration", "Origin", "Destination", "Cabin Class Type", "Fare");
+            
+            for (FlightScheduleEntity list : schedule) { 
+                for (FareEntity fares : fare) {
+                    System.out.printf("%10s%15s%20s%25s%30s%25s%40s%40s%20s%30s\n", plan.getFlightSchedulePlanId(), plan.getFlightNum(), plan.getTypeExistingInPlan(), list.getFlightScheduleId(), list.getDepartureDateTime().toString().substring(0, 19), list.getDuration(), route.getOrigin().getAirportName(), route.getDestination().getAirportName(), fares.getCabinClassType(), fares.getFareAmount());
+                }
+            }
+            System.out.println("--------------------------");
+            System.out.println("1: Update Flight Schedule Plan");
+            System.out.println("2: Delete Flight Schedule Plan");
+            System.out.println("3: Exit\n");
+            
+            System.out.print("> ");
+            response = sc.nextInt();
+            
+            if(response == 1) {
+                doUpdateFlightSchedulePlan(plan);
+            }
+            else if(response == 2) {
+                doDeleteFlightSchedulePlan(plan);
+            } else {
+                return ;
+            }
+    }   catch (FlightSchedulePlanDoNotExistException ex) {
+            System.out.println(ex.getMessage());
+        }
+    }
+    
 
     private void prepareInputDataValidationErrorsMessage(Set<ConstraintViolation<FlightEntity>> constraintViolations) {
        System.out.println("\nInput data validation error!:");
