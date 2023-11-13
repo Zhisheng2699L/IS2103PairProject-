@@ -10,6 +10,8 @@ import exceptions.AirportDoNotExistException;
 import exceptions.FlightRouteDoNotExistException;
 import exceptions.FlightRouteExistException;
 import exceptions.UnknownPersistenceException;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -63,7 +65,15 @@ public class FlightRouteSessionBean implements FlightRouteSessionBeanRemote, Fli
 
     @Override
     public long setComplementaryFlightRoute(long routeID) throws FlightRouteDoNotExistException {
-        throw new UnsupportedOperationException("Not supported yet."); 
+        FlightRouteEntity route = retrieveFlightRouteById(routeID);
+        FlightRouteEntity other = searchForFlightRouteByOriginAndDestination(route.getDestination().getIATACode(),
+                route.getOrigin().getIATACode());
+
+        route.setOriginRoute(other);
+        route.setComplementaryRoute(other);
+        other.setComplementaryRoute(route);
+        other.setOriginRoute(route);
+        return other.getFlightRouteId();
     }
 
     @Override
@@ -81,30 +91,28 @@ public class FlightRouteSessionBean implements FlightRouteSessionBeanRemote, Fli
     @Override
     public List<FlightRouteEntity> retrieveAllFlightRouteInOrder() throws FlightRouteDoNotExistException {
         Query query = em.createQuery("SELECT DISTINCT f FROM FlightRouteEntity f WHERE f.disabled=false ORDER BY f.origin.airportName ASC");
-            List<FlightRouteEntity> result = query.getResultList();
-            if (result.isEmpty()) {
-                throw new FlightRouteDoNotExistException("No flight routes in system!");
-            }
-            int x = result.size()-1;
-            while (x >= 0) {
-                FlightRouteEntity flightroute = result.get(x);
-                boolean replaced = false;
-                for (int y = x - 2; y >= 0; y--) {
-                    FlightRouteEntity otherflightroute = result.get(y);
-                    if (otherflightroute.getComplementaryRoute()  != null
-                            && otherflightroute.getComplementaryRoute().getFlightRouteId() == flightroute.getFlightRouteId()) {
-                        result.remove(x);
-                        result.add(y + 1, flightroute);
-                        replaced = true;
-                        break;
-                        
-                    }
-                }
-                if (replaced) {continue;}
-                x--;
-            }
-            return result;
+        List<FlightRouteEntity> result = query.getResultList();
+
+        if (result.isEmpty()) {
+            throw new FlightRouteDoNotExistException("No flight routes in system!");
         }
+        Collections.sort(result, new ComplementaryFlightRouteComparator());
+
+        return result;
+    }
+    private class ComplementaryFlightRouteComparator implements Comparator<FlightRouteEntity> {
+
+        @Override
+        public int compare(FlightRouteEntity route1, FlightRouteEntity route2) {
+         
+            if (route1.getComplementaryRoute() != null && route1.getComplementaryRoute().getFlightRouteId().equals(route2.getFlightRouteId())) {
+                return 1;
+            } else if (route2.getComplementaryRoute() != null && route2.getComplementaryRoute().getFlightRouteId().equals(route1.getFlightRouteId())) {
+                return -1;
+            }
+            return 0;
+        }
+    }
 
     @Override
     public FlightRouteEntity enableFlightRoute(long originAirportId, long destinationAirportId) throws FlightRouteDoNotExistException {
@@ -140,14 +148,12 @@ public class FlightRouteSessionBean implements FlightRouteSessionBeanRemote, Fli
         }
     }
     
-    
     @Override
     public FlightRouteEntity retrieveFlightRouteById(Long id) throws FlightRouteDoNotExistException {
         FlightRouteEntity route = em.find(FlightRouteEntity.class, id);
-        if (route == null || route.isDisabled() == true) {
+        if (route == null || route.isDisabled()) {
             throw new FlightRouteDoNotExistException("Flight Route does not exist!");
         }
         return route;
     }
-
 }
