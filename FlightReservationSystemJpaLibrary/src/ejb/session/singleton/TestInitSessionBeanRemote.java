@@ -11,8 +11,6 @@ import javax.ejb.Remote;
  * @author foozh
  */
 @Remote
-public interface DataInitSessionBeanRemote {
-    
-    public void postConstruct();
+public interface TestInitSessionBeanRemote {
     
 }

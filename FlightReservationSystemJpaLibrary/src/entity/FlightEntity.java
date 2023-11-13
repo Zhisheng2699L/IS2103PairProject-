@@ -62,6 +62,11 @@ public class FlightEntity implements Serializable {
         this.flightNum = flightNum;
     }
 
+    public FlightEntity(String flightNum) {
+        this.flightNum = flightNum;
+    }
+    
+
     public FlightEntity(Long FlightId, String flightNum, boolean disabled, FlightRouteEntity flightRoute, AircraftConfigurationEntity aircraftConfig, List<FlightSchedulePlanEntity> flightSchedulePlan) {
         this.flightId = FlightId;
         this.flightNum = flightNum;

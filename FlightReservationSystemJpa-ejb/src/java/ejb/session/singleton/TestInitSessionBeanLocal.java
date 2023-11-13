@@ -11,8 +11,6 @@ import javax.ejb.Local;
  * @author foozh
  */
 @Local
-public interface DataInitSessionBeanLocal {
-    
-    public void postConstruct();
+public interface TestInitSessionBeanLocal {
     
 }

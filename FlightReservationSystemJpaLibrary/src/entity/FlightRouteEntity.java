@@ -79,6 +79,22 @@ public class FlightRouteEntity implements Serializable {
         this.originRoute = originRoute;
     }
 
+    public FlightRouteEntity(boolean disabled, List<FlightEntity> flights, AirportEntity origin, AirportEntity destination, FlightRouteEntity complementaryRoute, FlightRouteEntity originRoute) {
+        this.disabled = disabled;
+        this.flights = flights;
+        this.origin = origin;
+        this.destination = destination;
+        this.complementaryRoute = complementaryRoute;
+        this.originRoute = originRoute;
+    }
+
+    public FlightRouteEntity(AirportEntity origin, AirportEntity destination) {
+        this.origin = origin;
+        this.destination = destination;
+    }
+
+    
+
     
     public FlightRouteEntity(Long flightrouteId, boolean disabled, List<FlightEntity> flights, AirportEntity origin, AirportEntity destination) {
         this.flightRouteId = flightrouteId;

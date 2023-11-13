@@ -70,6 +70,17 @@ public class AirportEntity implements Serializable {
         this.country = country;
         this.gmt = gmt;
     }
+
+    public AirportEntity(String airportName, String IATACode, String city, String state, String country, int gmt) {
+        this.airportName = airportName;
+        this.IATACode = IATACode;
+        this.city = city;
+        this.state = state;
+        this.country = country;
+        this.gmt = gmt;
+    }
+    
+    
     
     public AirportEntity(String airport_does_not_exist) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.

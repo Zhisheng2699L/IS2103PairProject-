@@ -4,6 +4,7 @@
  */
 package entity;
 
+import enumeration.CabinClassTypeEnum;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import javax.persistence.CascadeType;
@@ -33,7 +34,7 @@ public class FareEntity implements Serializable {
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     @NotNull
-    private CabinClassEntity cabinClassType;
+    private CabinClassTypeEnum  cabinClassType;
     
     @Column(nullable = false)
     @NotNull
@@ -50,20 +51,15 @@ public class FareEntity implements Serializable {
     public FareEntity() {
     }
 
-    public FareEntity(Long fareId, CabinClassEntity cabinClassType, String fareBasisCode, BigDecimal fareAmonut, FlightSchedulePlanEntity flightSchedulePlan) {
-        this.fareId = fareId;
-        this.cabinClassType = cabinClassType;
-        this.fareBasisCode = fareBasisCode;
-        this.fareAmount = fareAmonut;
-        this.flightSchedulePlan = flightSchedulePlan;
-    }
-    
-    public FareEntity(CabinClassEntity cabinClassType, String fareBasisCode, BigDecimal fareAmonut) {
+    public FareEntity(String fareBasisCode, BigDecimal fareAmount, CabinClassTypeEnum cabinClassType) {
         this();
-        this.cabinClassType = cabinClassType;
         this.fareBasisCode = fareBasisCode;
-        this.fareAmount = fareAmonut;
+        this.fareAmount = fareAmount;
+        this.cabinClassType = cabinClassType;
     }
+
+
+
 
     public Long getFareId() {
         return fareId;
@@ -73,11 +69,11 @@ public class FareEntity implements Serializable {
         this.fareId = fareId;
     }
 
-    public CabinClassEntity getCabinClassType() {
+    public CabinClassTypeEnum getCabinClassType() {
         return cabinClassType;
     }
 
-    public void setCabinClassType(CabinClassEntity cabinClassType) {
+    public void setCabinClassType(CabinClassTypeEnum cabinClassType) {
         this.cabinClassType = cabinClassType;
     }
 
