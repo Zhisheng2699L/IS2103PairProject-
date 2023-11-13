@@ -78,6 +78,11 @@ public class AircraftConfigurationEntity implements Serializable {
     public AircraftTypeEntity getAircraftType() {
         return aircraftType;
     }
+    
+    public AircraftConfigurationEntity(String name, int numberOfCabinClasses) {
+        this.name = name;
+        this.numberOfCabinClasses = numberOfCabinClasses;
+    }
 
     public void setAircraftType(AircraftTypeEntity aircraftType) {
         this.aircraftType = aircraftType;

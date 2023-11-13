@@ -57,7 +57,7 @@ public class CabinClassEntity implements Serializable {
     @Column(nullable = false)
     @Size(min = 1, max = 5)
     @NotNull
-    private int seatingConfigPerColumn;
+    private String seatingConfigPerColumn;
     
     @Column(nullable = false)
     @Min(1)
@@ -71,7 +71,7 @@ public class CabinClassEntity implements Serializable {
     public CabinClassEntity() {
     }
 
-    public CabinClassEntity(Long cabinClassId, CabinClassTypeEnum cabinClassType, int numOfAisles, int numRows, int numSeatsAbreast, int seatingConfigPerColumn, int maxSeatCapacity, AircraftConfigurationEntity aircraftConfig) {
+    public CabinClassEntity(Long cabinClassId, CabinClassTypeEnum cabinClassType, int numOfAisles, int numRows, int numSeatsAbreast, String seatingConfigPerColumn, int maxSeatCapacity, AircraftConfigurationEntity aircraftConfig) {
         this.cabinClassId = cabinClassId;
         this.cabinClassType = cabinClassType;
         this.numOfAisles = numOfAisles;
@@ -82,7 +82,7 @@ public class CabinClassEntity implements Serializable {
         this.aircraftConfig = aircraftConfig;
     }
 
-    public CabinClassEntity(CabinClassTypeEnum cabinClassType, int numOfAisles, int numRows, int numSeatsAbreast, int seatingConfigPerColumn, int maxSeatCapacity) {
+    public CabinClassEntity(CabinClassTypeEnum cabinClassType, int numOfAisles, int numRows, int numSeatsAbreast, String seatingConfigPerColumn, int maxSeatCapacity) {
         this.cabinClassType = cabinClassType;
         this.numOfAisles = numOfAisles;
         this.numRows = numRows;
@@ -131,11 +131,11 @@ public class CabinClassEntity implements Serializable {
         this.numSeatsAbreast = numSeatsAbreast;
     }
 
-    public int getSeatingConfigPerColumn() {
+    public String getSeatingConfigPerColumn() {
         return seatingConfigPerColumn;
     }
 
-    public void setSeatingConfigPerColumn(int seatingConfigPerColumn) {
+    public void setSeatingConfigPerColumn(String seatingConfigPerColumn) {
         this.seatingConfigPerColumn = seatingConfigPerColumn;
     }
 

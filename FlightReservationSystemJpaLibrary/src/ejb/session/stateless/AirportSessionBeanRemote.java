@@ -4,6 +4,8 @@
  */
 package ejb.session.stateless;
 
+import entity.AirportEntity;
+import exceptions.AirportDoNotExistException;
 import javax.ejb.Remote;
 
 /**
@@ -12,5 +14,7 @@ import javax.ejb.Remote;
  */
 @Remote
 public interface AirportSessionBeanRemote {
-    
+    public AirportEntity retrieveAirportById(Long id) throws AirportDoNotExistException;
+
+    public AirportEntity retrieveAirportByIATA(String iata) throws AirportDoNotExistException;
 }
