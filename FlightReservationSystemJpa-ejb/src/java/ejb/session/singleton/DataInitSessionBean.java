@@ -32,7 +32,7 @@ import javax.ejb.Startup;
 @Singleton
 @LocalBean
 @Startup
-public class DataInitSessionBean {
+public class DataInitSessionBean implements DataInitSessionBeanRemote, DataInitSessionBeanLocal {
 
     @EJB
     private AircraftTypeSessionBeanLocal aircraftTypeSessionBean;
