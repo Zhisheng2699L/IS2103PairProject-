@@ -48,7 +48,5 @@ public interface FlightSchedulePlanSessionBeanRemote {
     public void deleteFlightSchedulePlan(Long flightSchedulePlanID) throws FlightSchedulePlanDoNotExistException, FlightScheduleNotFoundException, FareDoNotExistException;
     
     public void processFlightSchedulePlanDeletion(FlightSchedulePlanEntity plan);
-    
-    
-    
+   
 }
