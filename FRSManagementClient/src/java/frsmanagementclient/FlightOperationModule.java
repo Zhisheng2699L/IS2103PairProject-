@@ -128,7 +128,8 @@ public class FlightOperationModule {
      * @throws UnknownPersistenceException
      * @throws AircraftConfigNotFoundException
      */
-    public void flightDetails() throws ExistingFlightException, FlightRouteDoNotExistException, ViolationConstraintsException, InputDataValidationException, FlightExistException, UnknownPersistenceException, AircraftConfigNotFoundException {
+    public void flightDetails() throws ExistingFlightException, FlightRouteDoNotExistException, ViolationConstraintsException,
+            InputDataValidationException, FlightExistException, UnknownPersistenceException, AircraftConfigNotFoundException {
         Scanner sc = new Scanner(System.in);
         int choice = 0;
         
@@ -403,7 +404,7 @@ public class FlightOperationModule {
 
     
     /*============================ START OF updateFlightSchedule in updateFlightSchedulePlan  ==================================*/
-    private void updateFlightSchedule(FlightSchedulePlanEntity plan) {
+    private void updateFlightSchedule(FlightSchedulePlanEntity plan) throws java.text.ParseException {
         Scanner sc =  new Scanner(System.in);
         System.out.printf("%30s%30s%20s\n", "Flight Schedule ID", "Departure Date Time", "Duration");
         for (FlightScheduleEntity flightSchedule: plan.getFlightSchedule()) {

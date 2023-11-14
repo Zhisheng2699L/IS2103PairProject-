@@ -4,10 +4,24 @@
  */
 package flightreservationsystemjpaclient;
 
-import ejb.session.stateless.RecordSessionBeanRemote;
-import entity.Record;
-import java.util.List;
+import ejb.session.stateless.AircraftConfigurationSessionBeanRemote;
+import ejb.session.stateless.AircraftTypeSessionBeanRemote;
+import ejb.session.stateless.AirportSessionBeanRemote;
+import ejb.session.stateless.CustomerSessionBeanRemote;
+import ejb.session.stateless.EmployeeSessionBeanRemote;
+import ejb.session.stateless.FareSessionBeanRemote;
+import ejb.session.stateless.FlightRouteSessionBeanRemote;
+import ejb.session.stateless.FlightSchedulePlanSessionBeanRemote;
+import ejb.session.stateless.FlightScheduleSessionBeanRemote;
+import ejb.session.stateless.FlightSessionBeanRemote;
+import ejb.session.stateless.ItinerarySessionBeanRemote;
+import ejb.session.stateless.PartnerSessionBeanRemote;
+import ejb.session.stateless.PassengerSessionBeanRemote;
+import ejb.session.stateless.ReservationSessionBeanRemote;
+import ejb.session.stateless.SeatsAvailabilitySessionBeanRemote;
 import javax.ejb.EJB;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 
 /**
  *
@@ -15,22 +29,64 @@ import javax.ejb.EJB;
  */
 public class Main {
 
+     @PersistenceContext(unitName = "FlightReservationSystemJpa-ejbPU")
+    private EntityManager em;
+    
     @EJB
-    private static RecordSessionBeanRemote recordSessionBeanRemote;
+    private EmployeeSessionBeanRemote employeeSessionBean;
+    
+    @EJB
+    private PartnerSessionBeanRemote partnerSessionBean;
+    
+    @EJB
+    private AircraftTypeSessionBeanRemote aircraftTypeSessionBean;
+    
+    @EJB
+    private AirportSessionBeanRemote airportSessionBean;
+    
+    @EJB
+    private AircraftConfigurationSessionBeanRemote aircraftConfigurationSessionBean;
+    
+    @EJB
+    private FlightSchedulePlanSessionBeanRemote flightSchedulePlanSessionBean;
+
+    @EJB
+    private FlightSessionBeanRemote flightSessionBean;
+
+    @EJB
+    private FlightRouteSessionBeanRemote flightRouteSessionBean;
+    
+    @EJB
+    private FareSessionBeanRemote fareSessionBean;
+
+    @EJB
+    private SeatsAvailabilitySessionBeanRemote seatsInventorySessionBean;
+
+    @EJB
+    private FlightScheduleSessionBeanRemote flightScheduleSessionBean;
+    
+    @EJB
+    private CustomerSessionBeanRemote customerSessionBean;
+    
+    @EJB
+    private ItinerarySessionBeanRemote itinerarySessionBean;
+
+    @EJB
+    private ReservationSessionBeanRemote reservationSessionBean;
+    
+    @EJB
+    private PassengerSessionBeanRemote passengerSessionBean;
+    
+    
 
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        // TODO code application logic here
-        List<Record> retrieveAllRecords = recordSessionBeanRemote.retrieveAllRecords();
         
-        for(Record record : retrieveAllRecords) {
-            
-            System.out.println(record.getRecordId() + ", " + record.getYourAss());
-        }
-        
-        
+        MainApp mainApp = new MainApp(itinerarySessionBean, reservationSessionBean, passengerSessionBean, fareSessionBean, seatsInventorySessionBean, flightRouteSessionBean, flightSessionBean,
+                flightSchedulePlanSessionBean, flightScheduleSessionBean, airportSessionBean, customerSessionBean);
+        mainApp.runApp();
     }
     
 }
