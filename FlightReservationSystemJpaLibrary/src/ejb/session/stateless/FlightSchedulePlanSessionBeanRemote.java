@@ -8,7 +8,9 @@ import entity.FareEntity;
 import entity.FlightSchedulePlanEntity;
 import exceptions.ExistingFareException;
 import exceptions.ExistingFlightSchedulePlanException;
+import exceptions.FareDoNotExistException;
 import exceptions.FlightNotFoundException;
+import exceptions.FlightScheduleNotFoundException;
 import exceptions.FlightSchedulePlanDoNotExistException;
 import exceptions.InputDataValidationException;
 import exceptions.UnknownPersistenceException;
@@ -43,6 +45,7 @@ public interface FlightSchedulePlanSessionBeanRemote {
     
     public void associateExistingPlanToComplementaryPlan(Long sourcFlightSchedulePlanID, Long returnFlightSchedulePlanID) throws FlightSchedulePlanDoNotExistException;
     
+    public void deleteFlightSchedulePlan(Long flightSchedulePlanID) throws FlightSchedulePlanDoNotExistException, FlightScheduleNotFoundException, FareDoNotExistException;
     
     public void processFlightSchedulePlanDeletion(FlightSchedulePlanEntity plan);
     

@@ -20,13 +20,20 @@ import entity.FlightSchedulePlanEntity;
 import enumeration.EmployeeAccessRightEnum;
 import exceptions.AircraftConfigNotFoundException;
 import exceptions.ExistingFlightException;
+import exceptions.FareDoNotExistException;
 import exceptions.FlightExistException;
 import exceptions.FlightNotFoundException;
 import exceptions.FlightRouteDoNotExistException;
+import exceptions.FlightScheduleNotFoundException;
 import exceptions.FlightSchedulePlanDoNotExistException;
 import exceptions.InputDataValidationException;
+import exceptions.InvalidCostException;
 import exceptions.UnknownPersistenceException;
+import exceptions.UpdateFlightScheduleException;
 import exceptions.ViolationConstraintsException;
+import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
 import java.util.Set;
@@ -34,7 +41,8 @@ import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
 import javax.validation.Validation;
 import javax.validation.ValidatorFactory;
-=======
+import oracle.jrockit.jfr.parser.ParseException;
+
 /**
  *
  * @author kahjy
@@ -307,10 +315,10 @@ public class FlightOperationModule {
             response = sc.nextInt();
             
             if(response == 1) {
-                doUpdateFlightSchedulePlan(plan);
+                updateFlightSchedulePlan(plan);
             }
             else if(response == 2) {
-                doDeleteFlightSchedulePlan(plan);
+                deleteFlightSchedulePlan(plan);
             } else {
                 return ;
             }
@@ -318,8 +326,135 @@ public class FlightOperationModule {
             System.out.println(ex.getMessage());
         }
     }
-    
+        
+    private void updateFlightSchedulePlan(FlightSchedulePlanEntity plan) throws InvalidCostException {
+        Scanner sc = new Scanner(System.in);
+        System.out.println("*** Update Flight Schedule Plan ***");
 
+        System.out.println("1: Update Fares");
+        System.out.println("2: Update Flight Schedules");
+        System.out.println("3: Back\n");
+
+        System.out.print("> ");
+        int response = sc.nextInt();
+
+        if(response == 1) {
+            updateFares(plan);
+        }
+        else if(response == 2) {
+            updateFlightSchedule(plan);
+        } 
+    
+    }
+    
+    /*========================== START OF updateFares in updateFlightSchedulePlan ======================================== */
+    private void updateFares(FlightSchedulePlanEntity plan) throws InvalidCostException {
+        try {
+            Scanner sc = new Scanner(System.in);
+            displayAllFares(plan);
+            
+            System.out.print("Which fare do you want to update (integer number only)?: ");
+            int choice = sc.nextInt();
+            sc.nextLine();
+            if (choice < 1 || choice > plan.getFares().size()) {
+                System.out.println("ERROR: Invalid option\n Please try again!\n");
+                return;
+            }
+            FareEntity fare = plan.getFares().get(choice - 1);
+            System.out.print("Enter new fare amount> ");
+            BigDecimal newAmt = sc.nextBigDecimal();
+            fareSessionBean.updateFare(fare.getFareId(), newAmt);
+            System.out.println("Fare updated successfully!\n");
+        } catch (FareDoNotExistException ex) {
+            System.out.println("ERROR: " + ex.getMessage() + "\n");
+            
+        }
+    }
+    
+    private void displayAllFares(FlightSchedulePlanEntity plan) {
+        System.out.println(" = All Fares Shown Here =");
+        int i = 1;
+        for (FareEntity fare : plan.getFares()) {
+            System.out.println(i + ") " + fare.getFareBasisCode() + ", $" + fare.getFareAmount());
+            i++;
+        }
+    }
+    
+     /*========================== END OF updateFares in updateFlightSchedulePlan ======================================== */
+    
+    
+    /*========================== START OF deleteFlightSchedulePlan in doViewFlightSchedulePlanDetails ==========================*/
+    private void deleteFlightSchedulePlan(FlightSchedulePlanEntity plan) {
+        Scanner sc = new Scanner(System.in);
+        System.out.println("===== Delete Flight Schedule Plan =====");
+        System.out.print("Are you sure you want to delete (Y/N)> ");
+        String response = sc.nextLine().trim();
+        
+        if(response.equalsIgnoreCase("Y")) {
+            try {
+                flightSchedulePlanSessionBean.deleteFlightSchedulePlan(plan.getFlightSchedulePlanId());
+                System.out.println("Deletion successful!");
+            } catch (FlightSchedulePlanDoNotExistException | FlightScheduleNotFoundException | FareDoNotExistException ex) {
+                System.out.println("Error: " + ex.getMessage() + "\n");
+            }
+        }
+    }    
+     /*========================== END OF deleteFlightSchedulePlan in doViewFlightSchedulePlanDetails ======================================== */
+
+    
+    /*============================ START OF updateFlightSchedule in updateFlightSchedulePlan  ==================================*/
+    private void updateFlightSchedule(FlightSchedulePlanEntity plan) {
+        Scanner sc =  new Scanner(System.in);
+        System.out.printf("%30s%30s%20s\n", "Flight Schedule ID", "Departure Date Time", "Duration");
+        for (FlightScheduleEntity flightSchedule: plan.getFlightSchedule()) {
+            System.out.printf("%30s%30s%20s\n", flightSchedule.getFlightScheduleId(), flightSchedule.getDepartureDateTime().toString().substring(0, 19), flightSchedule.getDuration());
+        }
+        System.out.print("Which flight schedule would you like to update (ID)> ");
+        int flightScheduleId = sc.nextInt();
+        sc.nextLine();
+        System.out.println();
+        System.out.println("1: Update information");
+        System.out.println("2: Delete flight schedule");
+        System.out.println("3: Cancel\n");
+
+        System.out.print("> ");
+        int response = sc.nextInt();
+
+        if(response == 1) {
+            try {
+                Date departure;
+                double duration;
+                
+                SimpleDateFormat formatter = new SimpleDateFormat("dd/M/yyyy hh:mm:ss a");
+                
+                try {
+                    System.out.print("Enter new departure Date and Time (dd/mm/yyyy hh:mm:ss AM/PM)> ");
+                    String input = sc.nextLine().trim();
+                    departure = formatter.parse(input);
+                } catch (ParseException ex) {
+                    System.out.println("Error: Invalid date and time\nPlease try again\n");
+                    return;
+                }
+                System.out.print("Enter new estimated flight duration (HRS)> ");
+                duration = sc.nextDouble();
+                flightScheduleSessionBean.updateFlightSchedule(flightScheduleId, departure, duration);
+                System.out.println("Flight Schedule " + flightScheduleId + " successfully updated!\n");
+            } catch (FlightScheduleNotFoundException | UpdateFlightScheduleException ex) {
+                System.out.println("Error: " + ex.getMessage() +"\nPlease try again!\n");
+            }
+        }
+        else if(response == 2) {
+            try {
+                flightScheduleSessionBean.deleteFlightSchedule(flightScheduleId);
+                System.out.println("Flight Schedule " + flightScheduleId + " successfully removed!\n");
+            } catch (FlightScheduleNotFoundException | UpdateFlightScheduleException ex) {
+                System.out.println("Error: " + ex.getMessage() +"\n");
+            }
+        } 
+    }    
+    
+    
+    
     private void prepareInputDataValidationErrorsMessage(Set<ConstraintViolation<FlightEntity>> constraintViolations) {
        System.out.println("\nInput data validation error!:");
 

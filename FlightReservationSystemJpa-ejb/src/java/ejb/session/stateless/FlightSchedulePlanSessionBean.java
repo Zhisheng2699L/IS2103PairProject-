@@ -403,6 +403,35 @@ public class FlightSchedulePlanSessionBean implements FlightSchedulePlanSessionB
     private void disableFlightSchedulePlan(FlightSchedulePlanEntity plan) {
         plan.setDisabled(true);
     }
+    
+    @Override
+    public void deleteFlightSchedulePlan(Long planId) throws FlightSchedulePlanDoNotExistException {
+        FlightSchedulePlanEntity planToDelete = retrieveFlightSchedulePlanEntityById(planId);
+        
+        boolean canDeletePlan = planToDelete.getFlightSchedule().stream().allMatch(schedule -> schedule.getReservations().isEmpty());
+        
+        if (canDeletePlan) {
+            flightScheduleSessionBean.deleteSchedule(planToDelete.getFlightSchedule());
+            
+            FlightEntity flight = planToDelete.getFlight();
+            flight.getFlightSchedulePlan().remove(planToDelete);
+            
+            fareSessionBean.deleteFares(planToDelete.getFares());
+            
+            if (planToDelete.getOrigin() != null) {
+                planToDelete.getOrigin().setComplementary(null);
+                planToDelete.setOrigin(null);
+            }
+            if (planToDelete.getComplementary() != null) {
+                planToDelete.getComplementary().setOrigin(null);
+                planToDelete.setComplementary(null);
+            }
+            
+            em.remove(planToDelete);
+        } else {
+            planToDelete.setDisabled(true);   
+        }
+    }
  }
 
                 
