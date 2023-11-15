@@ -111,37 +111,37 @@ public class TestInitSessionBean implements TestInitSessionBeanRemote, TestInitS
             aircraftTypeSessionBean.createNewAircraftType(new AircraftTypeEntity("Boeing 747", 400));
             
             //Aircraft Config
+            List<CabinClassEntity> cabinClassList = new ArrayList<>();
             CabinClassEntity cabin = new CabinClassEntity(CabinClassTypeEnum.Y, 1, 30, 6, "3-3", 180);
-            AircraftConfigurationEntity config = new AircraftConfigurationEntity("Boeing 737 All Economy", 1);
-            List<CabinClassEntity> list = new ArrayList<>();
-            list.add(cabin);
-            aircraftConfigurationSessionBean.createNewAircraftConfig(config, 1l, list);
+            AircraftConfigurationEntity aircraftConfig = new AircraftConfigurationEntity("Boeing 737 All Economy", 1);
+            cabinClassList.add(cabin);
+            aircraftConfigurationSessionBean.createNewAircraftConfig(aircraftConfig, 1l, cabinClassList);
 
-            list.clear();
+            cabinClassList.clear();
             cabin = new CabinClassEntity(CabinClassTypeEnum.F, 1, 5, 2, "1-1", 10);
-            list.add(cabin);
+            cabinClassList.add(cabin);
             cabin = new CabinClassEntity(CabinClassTypeEnum.J, 1, 5, 4, "2-2", 20);
-            list.add(cabin);
+            cabinClassList.add(cabin);
             cabin = new CabinClassEntity(CabinClassTypeEnum.Y, 1, 25, 6, "3-3", 150);
-            list.add(cabin);
-            config = new AircraftConfigurationEntity("Boeing 737 Three Classes", 3);
-            aircraftConfigurationSessionBean.createNewAircraftConfig(config, 1l, list);
+            cabinClassList.add(cabin);
+            aircraftConfig = new AircraftConfigurationEntity("Boeing 737 Three Classes", 3);
+            aircraftConfigurationSessionBean.createNewAircraftConfig(aircraftConfig, 1l, cabinClassList);
 
-            list.clear();
+            cabinClassList.clear();
             cabin = new CabinClassEntity(CabinClassTypeEnum.Y, 2, 38, 10, "3-4-3", 380);
-            list.add(cabin);
-            config = new AircraftConfigurationEntity("Boeing 747 All Economy", 1);
-            aircraftConfigurationSessionBean.createNewAircraftConfig(config, 2l, list);
+            cabinClassList.add(cabin);
+            aircraftConfig = new AircraftConfigurationEntity("Boeing 747 All Economy", 1);
+            aircraftConfigurationSessionBean.createNewAircraftConfig(aircraftConfig, 2l, cabinClassList);
 
-            list.clear();
+            cabinClassList.clear();
             cabin = new CabinClassEntity(CabinClassTypeEnum.F, 1, 5, 2, "1-1", 10);
-            list.add(cabin);
+            cabinClassList.add(cabin);
             cabin = new CabinClassEntity(CabinClassTypeEnum.J, 2, 5, 6, "2-2-2", 30);
-            list.add(cabin);
+            cabinClassList.add(cabin);
             cabin = new CabinClassEntity(CabinClassTypeEnum.Y, 2, 32, 10, "3-4-3", 320);
-            list.add(cabin);
-            config = new AircraftConfigurationEntity("Boeing 747 Three Classes", 3);
-            aircraftConfigurationSessionBean.createNewAircraftConfig(config, 2l, list);
+            cabinClassList.add(cabin);
+            aircraftConfig = new AircraftConfigurationEntity("Boeing 747 Three Classes", 3);
+            aircraftConfigurationSessionBean.createNewAircraftConfig(aircraftConfig, 2l, cabinClassList);
             
             //Flight Route
             FlightRouteEntity source = new FlightRouteEntity(airportSessionBean.retrieveAirportByIATA("SIN"), airportSessionBean.retrieveAirportByIATA("HKG"));
@@ -152,7 +152,6 @@ public class TestInitSessionBean implements TestInitSessionBeanRemote, TestInitS
             source =  flightRouteSessionBean.createNewFlightRoute(new FlightRouteEntity(), airportSessionBean.retrieveAirportByIATA("SIN").getAirportID(), airportSessionBean.retrieveAirportByIATA("TPE").getAirportID());
             complimentary = flightRouteSessionBean.createNewFlightRoute(new FlightRouteEntity(), airportSessionBean.retrieveAirportByIATA("TPE").getAirportID(), airportSessionBean.retrieveAirportByIATA("SIN").getAirportID());
             flightRouteSessionBean.setComplementaryFlightRoute(source.getFlightRouteId());
-            
             
             source =  flightRouteSessionBean.createNewFlightRoute(new FlightRouteEntity(), airportSessionBean.retrieveAirportByIATA("SIN").getAirportID(), airportSessionBean.retrieveAirportByIATA("NRT").getAirportID());
             complimentary = flightRouteSessionBean.createNewFlightRoute(new FlightRouteEntity(), airportSessionBean.retrieveAirportByIATA("NRT").getAirportID(), airportSessionBean.retrieveAirportByIATA("SIN").getAirportID());
@@ -244,14 +243,14 @@ public class TestInitSessionBean implements TestInitSessionBeanRemote, TestInitS
              flightSessionBean.associateExistingFlightWithReturnFlight(flight.getFlightId(), flightReturn.getFlightId());
              
              //Flight Schedule Plan
-             SimpleDateFormat recurrentInputFormat = new SimpleDateFormat("dd/M/yyyy");
+             SimpleDateFormat recurrentFormat = new SimpleDateFormat("dd/M/yyyy");
              SimpleDateFormat scheduleFormatter = new SimpleDateFormat("dd/M/yyyy hh:mm:ss a");
 
-             Date recurrentEnd = recurrentInputFormat.parse("31/12/2020");
+             Date recurrentEnd = recurrentFormat.parse("31/12/2020");
              FlightEntity flight1 = flightSessionBean.retrieveFlightByFlightNumber("ML711");
              Date startDateTime = scheduleFormatter.parse("1/12/2020 9:00:00 AM");
              Pair<Date, Double> pair = new Pair<>(startDateTime, 14.0);
-             FlightSchedulePlanEntity fsp = new FlightSchedulePlanEntity(ScheduleTypeEnum.RECURRENTWEEK, recurrentEnd, flight1);
+             FlightSchedulePlanEntity flightSchedulePlan = new FlightSchedulePlanEntity(ScheduleTypeEnum.RECURRENTWEEK, recurrentEnd, flight1);
 
              List<FareEntity> fares = new ArrayList<>();
              fares.add(new FareEntity("F001", BigDecimal.valueOf(6500), CabinClassTypeEnum.F));
@@ -261,13 +260,13 @@ public class TestInitSessionBean implements TestInitSessionBeanRemote, TestInitS
              fares.add(new FareEntity("Y001", BigDecimal.valueOf(1500), CabinClassTypeEnum.Y));
              fares.add(new FareEntity("Y002", BigDecimal.valueOf(1000), CabinClassTypeEnum.Y));
 
-             fsp = flightSchedulePlanSessionBean.createNewFlightSchedulePlanWeekly(fsp, fares, flight1.getFlightId(), pair, 2);
-
-             FlightEntity flight2 = flightSessionBean.retrieveFlightByFlightNumber("ML712");
-             FlightSchedulePlanEntity returnFsp = new FlightSchedulePlanEntity(ScheduleTypeEnum.RECURRENTWEEK, recurrentEnd, flight2);
+             flightSchedulePlan = flightSchedulePlanSessionBean.createNewFlightSchedulePlanWeekly(flightSchedulePlan, fares, flight1.getFlightId(), pair, 2);
+             
              List<Pair<Date, Double>> info = new ArrayList<>();
+             FlightEntity flight2 = flightSessionBean.retrieveFlightByFlightNumber("ML712");
+             FlightSchedulePlanEntity returnFlightSchedulePlan = new FlightSchedulePlanEntity(ScheduleTypeEnum.RECURRENTWEEK, recurrentEnd, flight2);
              int diff = flight1.getFlightRoute().getDestination().getGmt() - flight1.getFlightRoute().getOrigin().getGmt();
-             for (FlightScheduleEntity fs : fsp.getFlightSchedule()) {
+             for (FlightScheduleEntity fs : flightSchedulePlan.getFlightSchedule()) {
                  Calendar c = Calendar.getInstance();
                  c.setTime(fs.getDepartureDateTime());
                  double duration = fs.getDuration();
@@ -288,14 +287,14 @@ public class TestInitSessionBean implements TestInitSessionBeanRemote, TestInitS
              fares2.add(new FareEntity("Y001", BigDecimal.valueOf(1500), CabinClassTypeEnum.Y));
              fares2.add(new FareEntity("Y002", BigDecimal.valueOf(1000), CabinClassTypeEnum.Y));
 
-             returnFsp = flightSchedulePlanSessionBean.createNewFlightSchedulePlanMultiple(returnFsp, info, fares2, flight2.getFlightId());
-             flightSchedulePlanSessionBean.associateExistingPlanToComplementaryPlan(fsp.getFlightSchedulePlanId(), returnFsp.getFlightSchedulePlanId());
+             returnFlightSchedulePlan = flightSchedulePlanSessionBean.createNewFlightSchedulePlanMultiple(returnFlightSchedulePlan, info, fares2, flight2.getFlightId());
+             flightSchedulePlanSessionBean.associateExistingPlanToComplementaryPlan(flightSchedulePlan.getFlightSchedulePlanId(), returnFlightSchedulePlan.getFlightSchedulePlanId());
              
-            recurrentEnd = recurrentInputFormat.parse("31/12/2020");
+            recurrentEnd = recurrentFormat.parse("31/12/2020");
             flight1 = flightSessionBean.retrieveFlightByFlightNumber("ML611");
             startDateTime = scheduleFormatter.parse("1/12/2020 12:00:00 PM");
             pair = new Pair<>(startDateTime, 8.0);
-            fsp = new FlightSchedulePlanEntity(ScheduleTypeEnum.RECURRENTWEEK, recurrentEnd, flight1);
+            flightSchedulePlan = new FlightSchedulePlanEntity(ScheduleTypeEnum.RECURRENTWEEK, recurrentEnd, flight1);
             
             fares.clear();
             fares.add(new FareEntity("F001", BigDecimal.valueOf(3250), CabinClassTypeEnum.F));
@@ -305,12 +304,12 @@ public class TestInitSessionBean implements TestInitSessionBeanRemote, TestInitS
             fares.add(new FareEntity("Y001", BigDecimal.valueOf(750), CabinClassTypeEnum.Y));
             fares.add(new FareEntity("Y002", BigDecimal.valueOf(500), CabinClassTypeEnum.Y));
             
-            fsp = flightSchedulePlanSessionBean.createNewFlightSchedulePlanWeekly(fsp, fares, flight1.getFlightId(), pair, 1);
+            flightSchedulePlan = flightSchedulePlanSessionBean.createNewFlightSchedulePlanWeekly(flightSchedulePlan, fares, flight1.getFlightId(), pair, 1);
             flight2 = flightSessionBean.retrieveFlightByFlightNumber("ML612");
-            returnFsp = new FlightSchedulePlanEntity(ScheduleTypeEnum.RECURRENTWEEK, recurrentEnd, flight2);
+            returnFlightSchedulePlan = new FlightSchedulePlanEntity(ScheduleTypeEnum.RECURRENTWEEK, recurrentEnd, flight2);
             info = new ArrayList<>();
             diff = flight1.getFlightRoute().getDestination().getGmt() - flight1.getFlightRoute().getOrigin().getGmt();
-            for(FlightScheduleEntity fs : fsp.getFlightSchedule()) {
+            for(FlightScheduleEntity fs : flightSchedulePlan.getFlightSchedule()) {
                 Calendar c = Calendar.getInstance();
                 c.setTime(fs.getDepartureDateTime());
                 double duration = fs.getDuration();
@@ -331,25 +330,25 @@ public class TestInitSessionBean implements TestInitSessionBeanRemote, TestInitS
             fares2.add(new FareEntity("Y001", BigDecimal.valueOf(750), CabinClassTypeEnum.Y));
             fares2.add(new FareEntity("Y002", BigDecimal.valueOf(500), CabinClassTypeEnum.Y));
                      
-            returnFsp = flightSchedulePlanSessionBean.createNewFlightSchedulePlanMultiple(returnFsp, info, fares2, flight2.getFlightId());
-            flightSchedulePlanSessionBean.associateExistingPlanToComplementaryPlan(fsp.getFlightSchedulePlanId(), returnFsp.getFlightSchedulePlanId());
+            returnFlightSchedulePlan = flightSchedulePlanSessionBean.createNewFlightSchedulePlanMultiple(returnFlightSchedulePlan, info, fares2, flight2.getFlightId());
+            flightSchedulePlanSessionBean.associateExistingPlanToComplementaryPlan(flightSchedulePlan.getFlightSchedulePlanId(), returnFlightSchedulePlan.getFlightSchedulePlanId());
             
-             recurrentEnd = recurrentInputFormat.parse("31/12/2020");
+             recurrentEnd = recurrentFormat.parse("31/12/2020");
              flight1 = flightSessionBean.retrieveFlightByFlightNumber("ML621");
              startDateTime = scheduleFormatter.parse("1/12/2020 10:00:00 AM");
              pair = new Pair<>(startDateTime, 8.0);
-             fsp = new FlightSchedulePlanEntity(ScheduleTypeEnum.RECURRENTWEEK, recurrentEnd, flight1);
+             flightSchedulePlan = new FlightSchedulePlanEntity(ScheduleTypeEnum.RECURRENTWEEK, recurrentEnd, flight1);
 
              fares.clear();
              fares.add(new FareEntity("Y001", BigDecimal.valueOf(700), CabinClassTypeEnum.Y));
              fares.add(new FareEntity("Y002", BigDecimal.valueOf(400), CabinClassTypeEnum.Y));
 
-             fsp = flightSchedulePlanSessionBean.createNewFlightSchedulePlanWeekly(fsp, fares, flight1.getFlightId(), pair, 3);
+             flightSchedulePlan = flightSchedulePlanSessionBean.createNewFlightSchedulePlanWeekly(flightSchedulePlan, fares, flight1.getFlightId(), pair, 3);
              flight2 = flightSessionBean.retrieveFlightByFlightNumber("ML622");
-             returnFsp = new FlightSchedulePlanEntity(ScheduleTypeEnum.RECURRENTWEEK, recurrentEnd, flight2);
+             returnFlightSchedulePlan = new FlightSchedulePlanEntity(ScheduleTypeEnum.RECURRENTWEEK, recurrentEnd, flight2);
              info = new ArrayList<>();
              diff = flight1.getFlightRoute().getDestination().getGmt() - flight1.getFlightRoute().getOrigin().getGmt();
-             for (FlightScheduleEntity fs : fsp.getFlightSchedule()) {
+             for (FlightScheduleEntity fs : flightSchedulePlan.getFlightSchedule()) {
                  Calendar c = Calendar.getInstance();
                  c.setTime(fs.getDepartureDateTime());
                  double duration = fs.getDuration();
@@ -366,16 +365,15 @@ public class TestInitSessionBean implements TestInitSessionBeanRemote, TestInitS
              fares2.add(new FareEntity("Y001", BigDecimal.valueOf(700), CabinClassTypeEnum.Y));
              fares2.add(new FareEntity("Y002", BigDecimal.valueOf(400), CabinClassTypeEnum.Y));
 
-             returnFsp = flightSchedulePlanSessionBean.createNewFlightSchedulePlanMultiple(returnFsp, info, fares2, flight2.getFlightId());
-             flightSchedulePlanSessionBean.associateExistingPlanToComplementaryPlan(fsp.getFlightSchedulePlanId(), returnFsp.getFlightSchedulePlanId());
-             ////////////  
-
-             ////////////  
-             recurrentEnd = recurrentInputFormat.parse("31/12/2020");
+             returnFlightSchedulePlan = flightSchedulePlanSessionBean.createNewFlightSchedulePlanMultiple(returnFlightSchedulePlan, info, fares2, flight2.getFlightId());
+             flightSchedulePlanSessionBean.associateExistingPlanToComplementaryPlan(flightSchedulePlan.getFlightSchedulePlanId(), returnFlightSchedulePlan.getFlightSchedulePlanId());
+            
+             
+             recurrentEnd = recurrentFormat.parse("31/12/2020");
              flight1 = flightSessionBean.retrieveFlightByFlightNumber("ML311");
              startDateTime = scheduleFormatter.parse("1/12/2020 10:00:00 AM");
              pair = new Pair<>(startDateTime, 6.5);
-             fsp = new FlightSchedulePlanEntity(ScheduleTypeEnum.RECURRENTWEEK, recurrentEnd, flight1);
+             flightSchedulePlan = new FlightSchedulePlanEntity(ScheduleTypeEnum.RECURRENTWEEK, recurrentEnd, flight1);
 
              fares.clear();
              fares.add(new FareEntity("F001", BigDecimal.valueOf(3350), CabinClassTypeEnum.F));
@@ -385,12 +383,12 @@ public class TestInitSessionBean implements TestInitSessionBeanRemote, TestInitS
              fares.add(new FareEntity("Y001", BigDecimal.valueOf(850), CabinClassTypeEnum.Y));
              fares.add(new FareEntity("Y002", BigDecimal.valueOf(600), CabinClassTypeEnum.Y));
 
-             fsp = flightSchedulePlanSessionBean.createNewFlightSchedulePlanWeekly(fsp, fares, flight1.getFlightId(), pair, 2);
+             flightSchedulePlan = flightSchedulePlanSessionBean.createNewFlightSchedulePlanWeekly(flightSchedulePlan, fares, flight1.getFlightId(), pair, 2);
              flight2 = flightSessionBean.retrieveFlightByFlightNumber("ML312");
-             returnFsp = new FlightSchedulePlanEntity(ScheduleTypeEnum.RECURRENTWEEK, recurrentEnd, flight2);
+             returnFlightSchedulePlan = new FlightSchedulePlanEntity(ScheduleTypeEnum.RECURRENTWEEK, recurrentEnd, flight2);
              info = new ArrayList<>();
              diff = flight1.getFlightRoute().getDestination().getGmt() - flight1.getFlightRoute().getOrigin().getGmt();
-             for (FlightScheduleEntity fs : fsp.getFlightSchedule()) {
+             for (FlightScheduleEntity fs : flightSchedulePlan.getFlightSchedule()) {
                  Calendar c = Calendar.getInstance();
                  c.setTime(fs.getDepartureDateTime());
                  double duration = fs.getDuration();
@@ -411,16 +409,15 @@ public class TestInitSessionBean implements TestInitSessionBeanRemote, TestInitS
              fares2.add(new FareEntity("Y001", BigDecimal.valueOf(850), CabinClassTypeEnum.Y));
              fares2.add(new FareEntity("Y002", BigDecimal.valueOf(600), CabinClassTypeEnum.Y));
 
-             returnFsp = flightSchedulePlanSessionBean.createNewFlightSchedulePlanMultiple(returnFsp, info , fares2, flight2.getFlightId());
-             flightSchedulePlanSessionBean.associateExistingPlanToComplementaryPlan(fsp.getFlightSchedulePlanId(), returnFsp.getFlightSchedulePlanId());
-             //////////// 
-
-             ////////////             
-             recurrentEnd = recurrentInputFormat.parse("31/12/2020");
+             returnFlightSchedulePlan = flightSchedulePlanSessionBean.createNewFlightSchedulePlanMultiple(returnFlightSchedulePlan, info , fares2, flight2.getFlightId());
+             flightSchedulePlanSessionBean.associateExistingPlanToComplementaryPlan(flightSchedulePlan.getFlightSchedulePlanId(), returnFlightSchedulePlan.getFlightSchedulePlanId());
+             
+             
+             recurrentEnd = recurrentFormat.parse("31/12/2020");
              flight1 = flightSessionBean.retrieveFlightByFlightNumber("ML411");
              startDateTime = scheduleFormatter.parse("1/12/2020 1:00:00 PM");
              pair = new Pair<>(startDateTime, 4.0);
-             fsp = new FlightSchedulePlanEntity(ScheduleTypeEnum.RECURRENTDAY, recurrentEnd, flight1);
+             flightSchedulePlan = new FlightSchedulePlanEntity(ScheduleTypeEnum.RECURRENTDAY, recurrentEnd, flight1);
 
              fares.clear();
              fares.add(new FareEntity("F001", BigDecimal.valueOf(3150), CabinClassTypeEnum.F));
@@ -430,12 +427,12 @@ public class TestInitSessionBean implements TestInitSessionBeanRemote, TestInitS
              fares.add(new FareEntity("Y001", BigDecimal.valueOf(650), CabinClassTypeEnum.Y));
              fares.add(new FareEntity("Y002", BigDecimal.valueOf(400), CabinClassTypeEnum.Y));
 
-             fsp = flightSchedulePlanSessionBean.createNewFlightSchedulePlan(fsp, fares, flight1.getFlightId(), pair, 2);
+             flightSchedulePlan = flightSchedulePlanSessionBean.createNewFlightSchedulePlan(flightSchedulePlan, fares, flight1.getFlightId(), pair, 2);
              flight2 = flightSessionBean.retrieveFlightByFlightNumber("ML412");
-             returnFsp = new FlightSchedulePlanEntity(ScheduleTypeEnum.RECURRENTDAY, recurrentEnd, flight2);
+             returnFlightSchedulePlan = new FlightSchedulePlanEntity(ScheduleTypeEnum.RECURRENTDAY, recurrentEnd, flight2);
              info = new ArrayList<>();
              diff = flight1.getFlightRoute().getDestination().getGmt() - flight1.getFlightRoute().getOrigin().getGmt();
-             for (FlightScheduleEntity fs : fsp.getFlightSchedule()) {
+             for (FlightScheduleEntity fs : flightSchedulePlan.getFlightSchedule()) {
                  Calendar c = Calendar.getInstance();
                  c.setTime(fs.getDepartureDateTime());
                  double duration = fs.getDuration();
@@ -456,11 +453,10 @@ public class TestInitSessionBean implements TestInitSessionBeanRemote, TestInitS
              fares2.add(new FareEntity("Y001", BigDecimal.valueOf(650), CabinClassTypeEnum.Y));
              fares2.add(new FareEntity("Y002", BigDecimal.valueOf(400), CabinClassTypeEnum.Y));
 
-             returnFsp = flightSchedulePlanSessionBean.createNewFlightSchedulePlanMultiple(returnFsp,info , fares2, flight2.getFlightId());
-             flightSchedulePlanSessionBean.associateExistingPlanToComplementaryPlan(fsp.getFlightSchedulePlanId(), returnFsp.getFlightSchedulePlanId());
-             ////////////  
-
-             ////////////  
+             returnFlightSchedulePlan = flightSchedulePlanSessionBean.createNewFlightSchedulePlanMultiple(returnFlightSchedulePlan,info , fares2, flight2.getFlightId());
+             flightSchedulePlanSessionBean.associateExistingPlanToComplementaryPlan(flightSchedulePlan.getFlightSchedulePlanId(), returnFlightSchedulePlan.getFlightSchedulePlanId());
+           
+             
              flight1 = flightSessionBean.retrieveFlightByFlightNumber("ML511");
              Date startDateTime1 = scheduleFormatter.parse("7/12/2020 5:00:00 PM");
              Date startDateTime2 = scheduleFormatter.parse("8/12/2020 5:00:00 PM");
@@ -469,7 +465,7 @@ public class TestInitSessionBean implements TestInitSessionBeanRemote, TestInitS
              list1.add(new Pair<>(startDateTime1, 3.0));
              list1.add(new Pair<>(startDateTime2, 3.0));
              list1.add(new Pair<>(startDateTime3, 3.0));
-             fsp = new FlightSchedulePlanEntity(ScheduleTypeEnum.MULTIPLE, flight1);
+             flightSchedulePlan = new FlightSchedulePlanEntity(ScheduleTypeEnum.MULTIPLE, flight1);
 
              fares.clear();
              fares.add(new FareEntity("F001", BigDecimal.valueOf(3100), CabinClassTypeEnum.F));
@@ -479,12 +475,12 @@ public class TestInitSessionBean implements TestInitSessionBeanRemote, TestInitS
              fares.add(new FareEntity("Y001", BigDecimal.valueOf(600), CabinClassTypeEnum.Y));
              fares.add(new FareEntity("Y002", BigDecimal.valueOf(350), CabinClassTypeEnum.Y));
 
-             fsp = flightSchedulePlanSessionBean.createNewFlightSchedulePlanMultiple(fsp,info, fares, flight1.getFlightId());
+             flightSchedulePlan = flightSchedulePlanSessionBean.createNewFlightSchedulePlanMultiple(flightSchedulePlan,info, fares, flight1.getFlightId());
              flight2 = flightSessionBean.retrieveFlightByFlightNumber("ML512");
-             returnFsp = new FlightSchedulePlanEntity(ScheduleTypeEnum.MULTIPLE, flight2);
+             returnFlightSchedulePlan = new FlightSchedulePlanEntity(ScheduleTypeEnum.MULTIPLE, flight2);
              info = new ArrayList<>();
              diff = flight1.getFlightRoute().getDestination().getGmt() - flight1.getFlightRoute().getOrigin().getGmt();
-             for (FlightScheduleEntity fs : fsp.getFlightSchedule()) {
+             for (FlightScheduleEntity fs : flightSchedulePlan.getFlightSchedule()) {
                  Calendar c = Calendar.getInstance();
                  c.setTime(fs.getDepartureDateTime());
                  double duration = fs.getDuration();
@@ -505,16 +501,11 @@ public class TestInitSessionBean implements TestInitSessionBeanRemote, TestInitS
              fares2.add(new FareEntity("Y001", BigDecimal.valueOf(600), CabinClassTypeEnum.Y));
              fares2.add(new FareEntity("Y002", BigDecimal.valueOf(350), CabinClassTypeEnum.Y));
 
-             returnFsp = flightSchedulePlanSessionBean.createNewFlightSchedulePlanMultiple(returnFsp, info,fares2, flight2.getFlightId());
-             flightSchedulePlanSessionBean.associateExistingPlanToComplementaryPlan(fsp.getFlightSchedulePlanId(), returnFsp.getFlightSchedulePlanId());
-             ////////////  
-             
-             
+             returnFlightSchedulePlan = flightSchedulePlanSessionBean.createNewFlightSchedulePlanMultiple(returnFlightSchedulePlan, info,fares2, flight2.getFlightId());
+             flightSchedulePlanSessionBean.associateExistingPlanToComplementaryPlan(flightSchedulePlan.getFlightSchedulePlanId(), returnFlightSchedulePlan.getFlightSchedulePlanId());
                
          }
-         
-         
-    
+           
         catch(Exception e){
             e.printStackTrace();
         }
