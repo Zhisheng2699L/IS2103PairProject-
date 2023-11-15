@@ -46,7 +46,7 @@ public class FlightScheduleSessionBean implements FlightScheduleSessionBeanRemot
     
     
     @EJB
-    private SeatsAvailabilitySessionBeanLocal seatsInventorySessionBean;
+    private SeatsAvailabilitySessionBeanLocal seatsAvailabilitySessionBean;
     
     @EJB
     private FlightSessionBeanLocal flightSessionBean; 
@@ -107,7 +107,7 @@ public class FlightScheduleSessionBean implements FlightScheduleSessionBeanRemot
     public void deleteSchedule(List<FlightScheduleEntity> flightSchedule) {
 
         for (FlightScheduleEntity s : flightSchedule) {
-            seatsInventorySessionBean.deleteSeatInventory(s.getSeatInventory());
+            seatsAvailabilitySessionBean.deleteSeatInventory(s.getSeatInventory());
             em.remove(s);
         }
     }
