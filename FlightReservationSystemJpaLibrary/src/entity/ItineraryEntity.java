@@ -30,7 +30,7 @@ public class ItineraryEntity implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long iternaryId;
+    private Long itineraryId;
     
     @Column(nullable = false, length = 20)
     @NotNull
@@ -59,19 +59,19 @@ public class ItineraryEntity implements Serializable {
     }
 
     public ItineraryEntity(Long iternaryId, String creditCardNumber, String cvv, UserEntity user, List<ReservationEntity> reservations) {
-        this.iternaryId = iternaryId;
+        this.itineraryId = iternaryId;
         this.creditCardNumber = creditCardNumber;
         this.cvv = cvv;
         this.user = user;
         this.reservations = reservations;
     }
     
-    public Long getIternaryId() {
-        return iternaryId;
+    public Long getItineraryId() {
+        return itineraryId;
     }
 
-    public void setIternaryId(Long iternaryId) {
-        this.iternaryId = iternaryId;
+    public void setItineraryId(Long itineraryId) {
+        this.itineraryId = itineraryId;
     }
 
     public String getCreditCardNumber() {
@@ -109,18 +109,18 @@ public class ItineraryEntity implements Serializable {
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (iternaryId != null ? iternaryId.hashCode() : 0);
+        hash += (itineraryId != null ? itineraryId.hashCode() : 0);
         return hash;
     }
 
     @Override
     public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the iternaryId fields are not set
+        // TODO: Warning - this method won't work in the case the itineraryId fields are not set
         if (!(object instanceof ItineraryEntity)) {
             return false;
         }
         ItineraryEntity other = (ItineraryEntity) object;
-        if ((this.iternaryId == null && other.iternaryId != null) || (this.iternaryId != null && !this.iternaryId.equals(other.iternaryId))) {
+        if ((this.itineraryId == null && other.itineraryId != null) || (this.itineraryId != null && !this.itineraryId.equals(other.itineraryId))) {
             return false;
         }
         return true;
@@ -128,7 +128,7 @@ public class ItineraryEntity implements Serializable {
 
     @Override
     public String toString() {
-        return "entity.Iternary[ id=" + iternaryId + " ]";
+        return "entity.Iternary[ id=" + itineraryId + " ]";
     }
     
 }
