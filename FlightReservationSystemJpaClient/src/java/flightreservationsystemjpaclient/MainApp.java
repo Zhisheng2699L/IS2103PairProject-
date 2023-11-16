@@ -56,46 +56,46 @@ import javax.ejb.EJB;
 public class MainApp {
     
     @EJB
-    private EmployeeSessionBeanRemote employeeSessionBean;
+    private static EmployeeSessionBeanRemote employeeSessionBean;
 
     @EJB
-    private PartnerSessionBeanRemote partnerSessionBean;
+    private static PartnerSessionBeanRemote partnerSessionBean;
 
     @EJB
-    private AircraftTypeSessionBeanRemote aircraftTypeSessionBean;
+    private static AircraftTypeSessionBeanRemote aircraftTypeSessionBean;
 
     @EJB
-    private AirportSessionBeanRemote airportSessionBean;
+    private static AirportSessionBeanRemote airportSessionBean;
 
     @EJB
-    private AircraftConfigurationSessionBeanRemote aircraftConfigurationSessionBean;
+    private static AircraftConfigurationSessionBeanRemote aircraftConfigurationSessionBean;
 
     @EJB
-    private FlightSchedulePlanSessionBeanRemote flightSchedulePlanSessionBean;
+    private static FlightSchedulePlanSessionBeanRemote flightSchedulePlanSessionBean;
 
     @EJB
-    private FlightSessionBeanRemote flightSessionBean;
+    private static FlightSessionBeanRemote flightSessionBean;
 
     @EJB
-    private FlightRouteSessionBeanRemote flightRouteSessionBean;
+    private static  FlightRouteSessionBeanRemote flightRouteSessionBean;
 
     @EJB
-    private FareSessionBeanRemote fareSessionBean;
+    private static FareSessionBeanRemote fareSessionBean;
 
     @EJB
-    private SeatsAvailabilitySessionBeanRemote seatsInventorySessionBean;
+    private static SeatsAvailabilitySessionBeanRemote seatsInventorySessionBean;
 
     @EJB
-    private FlightScheduleSessionBeanRemote flightScheduleSessionBean;
+    private static FlightScheduleSessionBeanRemote flightScheduleSessionBean;
 
     @EJB
-    private CustomerSessionBeanRemote customerSessionBean;
+    private static  CustomerSessionBeanRemote customerSessionBean;
 
     @EJB
-    private ItinerarySessionBeanRemote itinerarySessionBean;
+    private static ItinerarySessionBeanRemote itinerarySessionBean;
 
     @EJB
-    private ReservationSessionBeanRemote reservationSessionBean;
+    private static ReservationSessionBeanRemote reservationSessionBean;
 
     @EJB
     private PassengerSessionBeanRemote passengerSessionBean;
@@ -464,98 +464,98 @@ public class MainApp {
         return passengers;
     } 
     
-    private List<String> getSeatBookings(SeatInventoryEntity seatInventory, int noOfPassengers) throws SeatSlotNotFoundException {
-        Scanner sc = new Scanner(System.in);
-        int totalAvailSeats = seatInventory.getAvailable();
-        int totalReservedSeats = seatInventory.getReserved();
-        int totalBalanceSeats = seatInventory.getBalance();
-
-        char[][] seats = seatInventory.getSeats();
-        String cabinClassConfig = seatInventory.getCabin().getSeatingConfigPerColumn();
-
-        //Display Seats
-        String type = "";
-        if (null !=  seatInventory.getCabin().getCabinClassType())
-            switch (seatInventory.getCabin().getCabinClassType()) {
-                case F:
-                    type = "First Class";
-                    break;
-                case J:
-                    type = "Business Class";
-                    break;
-                case W:
-                    type = "Premium Economy Class";
-                    break;
-                case Y:
-                    type = "Economy Class";
-                    break;
-                default:
-                    break;
-            }
-
-        System.out.println(" -- " + type + " -- ");
-        System.out.print("Row  ");
-        int count = 0;
-        int no = 0;
-        for (int i = 0; i < cabinClassConfig.length(); i++) {
-            if (Character.isDigit(cabinClassConfig.charAt(i))) {
-                no += Integer.parseInt(String.valueOf(cabinClassConfig.charAt(i)));
-                while (count < no) {
-                    System.out.print((char)('A' + count) + "  ");
-                    count++;
-                }
-            } else {
-                System.out.print("   ");
-            }
-        }
-        System.out.println();
-
-        for (int j = 0; j < seats.length; j++) {
-            System.out.printf("%-5s", String.valueOf(j+1));
-            int count2 = 0;
-            int no2 = 0;
-            for (int i = 0; i < cabinClassConfig.length(); i++) {
-                if (Character.isDigit(cabinClassConfig.charAt(i))) {
-                    no2 += Integer.parseInt(String.valueOf(cabinClassConfig.charAt(i)));
-                    while (count2 < no2) {
-                        System.out.print(seats[j][count2] + "  ");
-                        count2++;
-                    }
-                } else {
-                    System.out.print("   ");
-                }
-            }
-            System.out.println();
-        }
-        System.out.println(" --- Total --- ");
-        System.out.println("Number of available seats: " + totalAvailSeats);
-        System.out.println("Number of reserved seats: " + totalReservedSeats);
-        System.out.println("Number of balance seats: " + totalBalanceSeats);
-
-        List<String> seatSelection = new ArrayList<>();
-        while (true) {        
-            for (int i = 0; i < noOfPassengers; i++) {                   
-                String seatNumber;
-                while (true) {
-                    System.out.print("\nEnter seat to reserve for Passenger " +  (i + 1) + "(Eg. A5)> ");
-                    seatNumber = sc.nextLine().trim();               
-                    boolean booked = seatsInventorySessionBean.checkIfBooked(seatInventory, seatNumber);
-                    if (booked) {
-                        System.out.println("Seat already taken!\nPlease choose another seat");
-                    } else {
-                        break;
-                    }
-                }    
-                seatSelection.add(seatNumber);
-            }
-            boolean distinct = seatSelection.stream().distinct().count() ==  seatSelection.size();
-            if (distinct) {
-                return seatSelection;
-            } else {
-                System.out.println("Duplicate seats detected!\nPlease try again");
-            }
-        }
-    }
+//    private List<String> getSeatBookings(SeatInventoryEntity seatInventory, int noOfPassengers) throws SeatSlotNotFoundException {
+//        Scanner sc = new Scanner(System.in);
+//        int totalAvailSeats = seatInventory.getAvailable();
+//        int totalReservedSeats = seatInventory.getReserved();
+//        int totalBalanceSeats = seatInventory.getBalance();
+//
+//        char[][] seats = seatInventory.getSeats();
+//        String cabinClassConfig = seatInventory.getCabin().getSeatingConfigPerColumn();
+//
+//        //Display Seats
+//        String type = "";
+//        if (null !=  seatInventory.getCabin().getCabinClassType())
+//            switch (seatInventory.getCabin().getCabinClassType()) {
+//                case F:
+//                    type = "First Class";
+//                    break;
+//                case J:
+//                    type = "Business Class";
+//                    break;
+//                case W:
+//                    type = "Premium Economy Class";
+//                    break;
+//                case Y:
+//                    type = "Economy Class";
+//                    break;
+//                default:
+//                    break;
+//            }
+//
+//        System.out.println(" -- " + type + " -- ");
+//        System.out.print("Row  ");
+//        int count = 0;
+//        int no = 0;
+//        for (int i = 0; i < cabinClassConfig.length(); i++) {
+//            if (Character.isDigit(cabinClassConfig.charAt(i))) {
+//                no += Integer.parseInt(String.valueOf(cabinClassConfig.charAt(i)));
+//                while (count < no) {
+//                    System.out.print((char)('A' + count) + "  ");
+//                    count++;
+//                }
+//            } else {
+//                System.out.print("   ");
+//            }
+//        }
+//        System.out.println();
+//
+//        for (int j = 0; j < seats.length; j++) {
+//            System.out.printf("%-5s", String.valueOf(j+1));
+//            int count2 = 0;
+//            int no2 = 0;
+//            for (int i = 0; i < cabinClassConfig.length(); i++) {
+//                if (Character.isDigit(cabinClassConfig.charAt(i))) {
+//                    no2 += Integer.parseInt(String.valueOf(cabinClassConfig.charAt(i)));
+//                    while (count2 < no2) {
+//                        System.out.print(seats[j][count2] + "  ");
+//                        count2++;
+//                    }
+//                } else {
+//                    System.out.print("   ");
+//                }
+//            }
+//            System.out.println();
+//        }
+//        System.out.println(" --- Total --- ");
+//        System.out.println("Number of available seats: " + totalAvailSeats);
+//        System.out.println("Number of reserved seats: " + totalReservedSeats);
+//        System.out.println("Number of balance seats: " + totalBalanceSeats);
+//
+//        List<String> seatSelection = new ArrayList<>();
+//        while (true) {        
+//            for (int i = 0; i < noOfPassengers; i++) {                   
+//                String seatNumber;
+//                while (true) {
+//                    System.out.print("\nEnter seat to reserve for Passenger " +  (i + 1) + "(Eg. A5)> ");
+//                    seatNumber = sc.nextLine().trim();               
+//                    boolean booked = seatsInventorySessionBean.checkIfBooked(seatInventory, seatNumber);
+//                    if (booked) {
+//                        System.out.println("Seat already taken!\nPlease choose another seat");
+//                    } else {
+//                        break;
+//                    }
+//                }    
+//                seatSelection.add(seatNumber);
+//            }
+//            boolean distinct = seatSelection.stream().distinct().count() ==  seatSelection.size();
+//            if (distinct) {
+//                return seatSelection;
+//            } else {
+//                System.out.println("Duplicate seats detected!\nPlease try again");
+//            }
+//        }
+//    }
     
     private SeatInventoryEntity getDesiredSeatInventory(FlightScheduleEntity flightSchedule) {
         Scanner sc = new Scanner(System.in);

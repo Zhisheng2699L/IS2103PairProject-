@@ -11,11 +11,11 @@ import exceptions.SeatAlreadyBookedException;
 import exceptions.SeatSlotNotFoundException;
 import exceptions.ViolationConstraintsException;
 import java.util.List;
-import java.util.Set;
 import javax.ejb.Stateless;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
@@ -25,7 +25,7 @@ import javax.validation.ValidatorFactory;
  * @author foozh
  */
 @Stateless
-public class SeatsAvailabilitySessionBean implements SeatsAvailabilitySessionBeanRemote, SeatsAvailabilitySessionBeanLocal {
+public class SeatsInventorySessionBean implements SeatsAvailabilitySessionBeanRemote, SeatsAvailabilitySessionBeanLocal {
 
     @PersistenceContext(unitName = "FlightReservationSystemJpa-ejbPU")
     private EntityManager em;
@@ -33,11 +33,13 @@ public class SeatsAvailabilitySessionBean implements SeatsAvailabilitySessionBea
     private final ValidatorFactory customValidatorFactory;
     private final Validator customValidator;
 
-    public SeatsAvailabilitySessionBean() {
+    public SeatsInventorySessionBean() {
         customValidatorFactory = Validation.buildDefaultValidatorFactory();
         customValidator = customValidatorFactory.getValidator();
     }
     
+    //@TransactionAttribute(TransactionAttributeType.REQUIRED)
+    @Override
     public SeatInventoryEntity createSeatInventory(SeatInventoryEntity seatInventory,
             FlightScheduleEntity flightSchedule, CabinClassEntity cabinClass) throws ViolationConstraintsException {
 
@@ -52,8 +54,8 @@ public class SeatsAvailabilitySessionBean implements SeatsAvailabilitySessionBea
         }
         seatInventory.setSeats(seats);
 
-        Set<ConstraintViolation<SeatInventoryEntity>> constraintViolations = customValidator.validate(seatInventory);
-        if (constraintViolations.isEmpty()) {
+        //Set<ConstraintViolation<SeatInventoryEntity>> constraintViolations = customValidator.validate(seatInventory);
+        //if (constraintViolations.isEmpty()) {
            
             seatInventory.setCabin(cabinClass);
             seatInventory.setFlightSchedule(flightSchedule);
@@ -61,11 +63,11 @@ public class SeatsAvailabilitySessionBean implements SeatsAvailabilitySessionBea
             em.persist(seatInventory);
             
             return seatInventory;
-        } else {
-            throw new ViolationConstraintsException("Constraints Violated");
-        }
+        //} else {
+            //throw new ViolationConstraintsException("Constraints Violated");
+        //}
     }
-    
+    @Override
     public SeatInventoryEntity retrieveSeatsById(Long seatInventoryID) throws SeatSlotNotFoundException {
         SeatInventoryEntity seat = em.find(SeatInventoryEntity.class, seatInventoryID);
         if (seat != null) {
@@ -74,13 +76,13 @@ public class SeatsAvailabilitySessionBean implements SeatsAvailabilitySessionBea
             throw new SeatSlotNotFoundException("Seat Inventory does not exist!");
         }
     }
-    
+    @Override
     public void deleteSeatInventory(List<SeatInventoryEntity> seats) {
         for (SeatInventoryEntity seat : seats) {
             em.remove(seat);
         }
     }
-    
+    @Override
     public void bookSeat(long seatInventoryId, String seatNumber) throws SeatAlreadyBookedException, SeatSlotNotFoundException {
         SeatInventoryEntity seatInventory = retrieveSeatsById(seatInventoryId);
 

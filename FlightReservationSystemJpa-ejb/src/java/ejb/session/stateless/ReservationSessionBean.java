@@ -46,7 +46,7 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
     @EJB
     private CabinClassSessionBeanLocal cabinClassSessionBean;
     @EJB
-    private SeatsAvailabilitySessionBean seatsAvailabilitySessionBean;
+    private SeatsInventorySessionBean seatsAvailabilitySessionBean;
     @EJB
     private FareSessionBeanLocal fareSessionBean;
     @EJB

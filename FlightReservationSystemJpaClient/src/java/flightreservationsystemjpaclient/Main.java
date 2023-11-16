@@ -19,6 +19,9 @@ import ejb.session.stateless.PartnerSessionBeanRemote;
 import ejb.session.stateless.PassengerSessionBeanRemote;
 import ejb.session.stateless.ReservationSessionBeanRemote;
 import ejb.session.stateless.SeatsAvailabilitySessionBeanRemote;
+import exceptions.CustomerExistException;
+import exceptions.InvalidLoginCredentialException;
+import exceptions.UnknownPersistenceException;
 import javax.ejb.EJB;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -33,59 +36,59 @@ public class Main {
     private EntityManager em;
     
     @EJB
-    private EmployeeSessionBeanRemote employeeSessionBean;
+    private static EmployeeSessionBeanRemote employeeSessionBean;
     
     @EJB
-    private PartnerSessionBeanRemote partnerSessionBean;
+    private static PartnerSessionBeanRemote partnerSessionBean;
     
     @EJB
-    private AircraftTypeSessionBeanRemote aircraftTypeSessionBean;
+    private static AircraftTypeSessionBeanRemote aircraftTypeSessionBean;
     
     @EJB
-    private AirportSessionBeanRemote airportSessionBean;
+    private static AirportSessionBeanRemote airportSessionBean;
     
     @EJB
-    private AircraftConfigurationSessionBeanRemote aircraftConfigurationSessionBean;
+    private static AircraftConfigurationSessionBeanRemote aircraftConfigurationSessionBean;
     
     @EJB
-    private FlightSchedulePlanSessionBeanRemote flightSchedulePlanSessionBean;
+    private static FlightSchedulePlanSessionBeanRemote flightSchedulePlanSessionBean;
 
     @EJB
-    private FlightSessionBeanRemote flightSessionBean;
+    private static FlightSessionBeanRemote flightSessionBean;
 
     @EJB
-    private FlightRouteSessionBeanRemote flightRouteSessionBean;
+    private static FlightRouteSessionBeanRemote flightRouteSessionBean;
     
     @EJB
-    private FareSessionBeanRemote fareSessionBean;
+    private static FareSessionBeanRemote fareSessionBean;
 
     @EJB
-    private SeatsAvailabilitySessionBeanRemote seatsInventorySessionBean;
+    private static SeatsAvailabilitySessionBeanRemote seatsInventorySessionBean;
 
     @EJB
-    private FlightScheduleSessionBeanRemote flightScheduleSessionBean;
+    private static FlightScheduleSessionBeanRemote flightScheduleSessionBean;
     
     @EJB
-    private CustomerSessionBeanRemote customerSessionBean;
+    private static CustomerSessionBeanRemote customerSessionBean;
     
     @EJB
-    private ItinerarySessionBeanRemote itinerarySessionBean;
+    private static ItinerarySessionBeanRemote itinerarySessionBean;
 
     @EJB
-    private ReservationSessionBeanRemote reservationSessionBean;
+    private static ReservationSessionBeanRemote reservationSessionBean;
     
     @EJB
-    private PassengerSessionBeanRemote passengerSessionBean;
+    private static PassengerSessionBeanRemote passengerSessionBean;
     
     
 
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) {
+    public static void main(String[] args) throws UnknownPersistenceException, CustomerExistException, InvalidLoginCredentialException {
         
-        MainApp mainApp = new MainApp(itinerarySessionBean, reservationSessionBean, passengerSessionBean, fareSessionBean, seatsInventorySessionBean, flightRouteSessionBean, flightSessionBean,
-                flightSchedulePlanSessionBean, flightScheduleSessionBean, airportSessionBean, customerSessionBean);
+        MainApp mainApp = new MainApp(employeeSessionBean, partnerSessionBean, aircraftTypeSessionBean, airportSessionBean, aircraftConfigurationSessionBean, flightSchedulePlanSessionBean, flightSessionBean,
+             flightRouteSessionBean, fareSessionBean, seatsInventorySessionBean, flightScheduleSessionBean, customerSessionBean, itinerarySessionBean, reservationSessionBean, passengerSessionBean);
         mainApp.runApp();
     }
     
