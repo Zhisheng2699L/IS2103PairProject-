@@ -46,7 +46,7 @@ public class FlightScheduleSessionBean implements FlightScheduleSessionBeanRemot
     
     
     @EJB
-    private SeatsAvailabilitySessionBeanLocal seatsAvailabilitySessionBean;
+    private SeatsInventorySessionBeanLocal seatsAvailabilitySessionBean;
     
     @EJB
     private FlightSessionBeanLocal flightSessionBean; 

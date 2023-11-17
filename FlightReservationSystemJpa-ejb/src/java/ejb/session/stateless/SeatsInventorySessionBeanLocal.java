@@ -18,10 +18,10 @@ import javax.ejb.Local;
  * @author foozh
  */
 @Local
-public interface SeatsAvailabilitySessionBeanLocal {
+public interface SeatsInventorySessionBeanLocal {
     
     public SeatInventoryEntity createSeatInventory(SeatInventoryEntity seatInventory,
-            FlightScheduleEntity flightSchedule, CabinClassEntity cabinClass) throws ViolationConstraintsException;
+FlightScheduleEntity flightSchedule, CabinClassEntity cabinClass) throws ViolationConstraintsException;
 
     public SeatInventoryEntity retrieveSeatsById(Long seatInventoryID) throws SeatSlotNotFoundException;
 

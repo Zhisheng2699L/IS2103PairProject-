@@ -46,7 +46,7 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
     @EJB
     private CabinClassSessionBeanLocal cabinClassSessionBean;
     @EJB
-    private SeatsAvailabilitySessionBean seatsAvailabilitySessionBean;
+    private SeatsInventorySessionBean seatsInventorySessionBean;
     @EJB
     private FareSessionBeanLocal fareSessionBean;
     @EJB
@@ -116,7 +116,7 @@ public long createNewReservation(ReservationEntity reservation, List<PassengerEn
             em.persist(passenger);
             reservation.getPassenger().add(passenger);
             try {
-                seatsAvailabilitySessionBean.bookSeat(seat.getSeatInventoryId(), passenger.getSeatNumber());
+                seatsInventorySessionBean.bookSeat(seat.getSeatInventoryId(), passenger.getSeatNumber());
             } catch (SeatAlreadyBookedException ex) {
                 Logger.getLogger(ReservationSessionBean.class.getName()).log(Level.SEVERE, null, ex);
             } catch (SeatSlotNotFoundException ex) {

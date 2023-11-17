@@ -6,7 +6,7 @@ package frsmanagementclient;
 
 import ejb.session.stateless.FlightSessionBeanRemote;
 import ejb.session.stateless.ReservationSessionBeanRemote;
-import ejb.session.stateless.SeatsAvailabilitySessionBeanRemote;
+import ejb.session.stateless.SeatsInventorySessionBeanRemote;
 import entity.EmployeeEntity;
 import entity.FlightEntity;
 import entity.FlightScheduleEntity;
@@ -32,13 +32,13 @@ import javafx.util.Pair;
 
 public class SalesAdminModule {
     private EmployeeEntity currentEmployee;
-    private SeatsAvailabilitySessionBeanRemote seatsAvailabilitySessionBean;
+    private SeatsInventorySessionBeanRemote seatsInventorySessionBean;
     private ReservationSessionBeanRemote reservationSessionBean;
     private FlightSessionBeanRemote flightSessionBean;
     
-    public SalesAdminModule(EmployeeEntity currentEmployee, SeatsAvailabilitySessionBeanRemote seatsAvailabilitySessionBean, ReservationSessionBeanRemote reservationSessionBean, FlightSessionBeanRemote flightSessionBean) {
+    public SalesAdminModule(EmployeeEntity currentEmployee, SeatsInventorySessionBeanRemote seatsAvailabilitySessionBean, ReservationSessionBeanRemote reservationSessionBean, FlightSessionBeanRemote flightSessionBean) {
         this.currentEmployee = currentEmployee;
-        this.seatsAvailabilitySessionBean = seatsAvailabilitySessionBean;
+        this.seatsInventorySessionBean = seatsAvailabilitySessionBean;
         this.reservationSessionBean = reservationSessionBean;
         this.flightSessionBean = flightSessionBean;
     }

@@ -15,7 +15,7 @@ import ejb.session.stateless.FlightSchedulePlanSessionBeanRemote;
 import ejb.session.stateless.FlightScheduleSessionBeanRemote;
 import ejb.session.stateless.FlightSessionBeanRemote;
 import ejb.session.stateless.ReservationSessionBeanRemote;
-import ejb.session.stateless.SeatsAvailabilitySessionBeanRemote;
+import ejb.session.stateless.SeatsInventorySessionBeanRemote;
 import exceptions.AircraftConfigNotFoundException;
 import exceptions.AirportDoNotExistException;
 import exceptions.CreateNewAircraftConfigErrorException;
@@ -39,7 +39,7 @@ import javax.ejb.EJB;
 public class Main {
 
     @EJB
-    private static SeatsAvailabilitySessionBeanRemote seatsAvailabilitySessionBeanRemote;
+    private static  SeatsInventorySessionBeanRemote seatsInventorySessionBeanRemote;
 
     @EJB
     private static ReservationSessionBeanRemote reservationSessionBeanRemote;
@@ -79,7 +79,7 @@ public class Main {
 
     public static void main(String[] args) throws UnknownPersistenceException, FlightExistException, AirportDoNotExistException, ExistingAircraftConfigException, CreateNewAircraftConfigErrorException, ExistingFlightException, ViolationConstraintsException, FlightNotFoundException, ParseException, InvalidCostException, AircraftConfigNotFoundException, FlightExistException, FlightRouteDoNotExistException, InputDataValidationException, InvalidLoginDetailsException {
         MainApp mainApp = new MainApp(flightScheduleSessionBeanRemote, airportSessionBeanRemote, aircraftTypeSessionBeanRemote, cabinClassSessionBeanRemote,
-                reservationSessionBeanRemote,seatsAvailabilitySessionBeanRemote, flightSchedulePlanSessionBeanRemote, flightSessionBeanRemote, 
+                reservationSessionBeanRemote,seatsInventorySessionBeanRemote, flightSchedulePlanSessionBeanRemote, flightSessionBeanRemote, 
                 flightRouteSessionBeanRemote, aircraftConfigurationSessionBeanRemote, employeeSessionBeanRemote, fareSessionBeanRemote);
         mainApp.runApp();
     }

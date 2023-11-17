@@ -18,18 +18,16 @@ import javax.ejb.Remote;
  * @author foozh
  */
 @Remote
-public interface SeatsAvailabilitySessionBeanRemote {
+public interface SeatsInventorySessionBeanRemote {
     
     public SeatInventoryEntity createSeatInventory(SeatInventoryEntity seatInventory,
-            FlightScheduleEntity flightSchedule, CabinClassEntity cabinClass) throws ViolationConstraintsException;
-    
+FlightScheduleEntity flightSchedule, CabinClassEntity cabinClass) throws ViolationConstraintsException;
+
     public SeatInventoryEntity retrieveSeatsById(Long seatInventoryID) throws SeatSlotNotFoundException;
-    
+
     public void deleteSeatInventory(List<SeatInventoryEntity> seats);
-    
+
     public void bookSeat(long seatInventoryId, String seatNumber) throws SeatAlreadyBookedException, SeatSlotNotFoundException;
-    
-    
+
     public boolean checkIfBooked(SeatInventoryEntity seatInventory, String seatNumber) throws SeatSlotNotFoundException;
-     
 }
