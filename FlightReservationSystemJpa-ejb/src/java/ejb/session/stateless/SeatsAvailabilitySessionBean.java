@@ -38,6 +38,7 @@ public class SeatsAvailabilitySessionBean implements SeatsAvailabilitySessionBea
         customValidator = customValidatorFactory.getValidator();
     }
     
+    @Override
     public SeatInventoryEntity createSeatInventory(SeatInventoryEntity seatInventory,
             FlightScheduleEntity flightSchedule, CabinClassEntity cabinClass) throws ViolationConstraintsException {
 
@@ -66,6 +67,7 @@ public class SeatsAvailabilitySessionBean implements SeatsAvailabilitySessionBea
         }
     }
     
+    @Override
     public SeatInventoryEntity retrieveSeatsById(Long seatInventoryID) throws SeatSlotNotFoundException {
         SeatInventoryEntity seat = em.find(SeatInventoryEntity.class, seatInventoryID);
         if (seat != null) {
@@ -75,12 +77,14 @@ public class SeatsAvailabilitySessionBean implements SeatsAvailabilitySessionBea
         }
     }
     
+    @Override
     public void deleteSeatInventory(List<SeatInventoryEntity> seats) {
         for (SeatInventoryEntity seat : seats) {
             em.remove(seat);
         }
     }
     
+    @Override
     public void bookSeat(long seatInventoryId, String seatNumber) throws SeatAlreadyBookedException, SeatSlotNotFoundException {
         SeatInventoryEntity seatInventory = retrieveSeatsById(seatInventoryId);
 
@@ -107,6 +111,7 @@ public class SeatsAvailabilitySessionBean implements SeatsAvailabilitySessionBea
         return new int[]{row, col};
     }
     
+    @Override
     public boolean checkIfBooked(SeatInventoryEntity seatInventory, String seatNumber) throws SeatSlotNotFoundException {
        
         char[][] mtx = seatInventory.getSeats();

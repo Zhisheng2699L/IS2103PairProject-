@@ -58,7 +58,7 @@ public class MainApp {
     private FlightOperationModule flightOperationModule;
     private SalesAdminModule salesAdminModule;
     
-    private boolean login = false;
+    private boolean loggedIn = false;
     private EmployeeEntity currentEmployee;
     
     public MainApp(FlightScheduleSessionBeanRemote flightScheduleSessionBean, AirportSessionBeanRemote airportSessionBean, AircraftTypeSessionBeanRemote aircraftTypeSessionBean, CabinClassSessionBeanRemote cabinClassSessionBean, ReservationSessionBeanRemote reservationSessionBean, SeatsAvailabilitySessionBeanRemote seatsAvailabilitySessionBean, FlightSchedulePlanSessionBeanRemote flightSchedulePlanSessionBean, FlightSessionBeanRemote flightSessionBean, FlightRouteSessionBeanRemote flightRouteSessionBean, AircraftConfigurationSessionBeanRemote aircraftConfigurationSessionBean, EmployeeSessionBeanRemote employeeSessionBean, FareSessionBeanRemote fareSessionBean) {
@@ -78,7 +78,7 @@ public class MainApp {
     
     public void runApp() throws UnknownPersistenceException, AirportDoNotExistException, ExistingAircraftConfigException, CreateNewAircraftConfigErrorException, AirportDoNotExistException, ExistingFlightException, ViolationConstraintsException, FlightNotFoundException, ParseException, InvalidCostException, AircraftConfigNotFoundException, FlightExistException, InputDataValidationException, AirportDoNotExistException, AirportDoNotExistException, FlightRouteDoNotExistException, AirportDoNotExistException, InvalidLoginDetailsException, AirportDoNotExistException, AirportDoNotExistException, AirportDoNotExistException, AirportDoNotExistException, AirportDoNotExistException {
         while (true) {
-            if(!login) {
+            if(!loggedIn) {
                 Scanner sc = new Scanner(System.in);
                 Integer response = 0;
                 
@@ -94,7 +94,7 @@ public class MainApp {
                         try {
                             doLogin();
                             System.out.println("Login Successful!\n");
-                            login = true;
+                            loggedIn = true;
                             flightOperationModule = new FlightOperationModule(flightScheduleSessionBean, currentEmployee, flightSessionBean, flightSchedulePlanSessionBean, flightRouteSessionBean, aircraftConfigurationSessionBean, fareSessionBean);
                             
                             flightRoutePlanningModule = new FlightRoutePlanningModule(currentEmployee, airportSessionBean, aircraftConfigurationSessionBean, aircraftTypeSessionBean, cabinClassSessionBean, flightRouteSessionBean);
@@ -130,7 +130,7 @@ public class MainApp {
         
         if(username.length() > 0 && password.length() > 0) {
             currentEmployee = employeeSessionBean.tryLogin(username, password);
-            //login = true;
+            //loggedIn = true;
         } else {
             throw new InvalidLoginCredentialException("Missing Login Credentials");
         }
@@ -140,13 +140,13 @@ public class MainApp {
         Scanner sc = new Scanner(System.in);
         Integer response = 0;
         
-        while(login) {
-            System.out.println("*** Merlion Flight Reservation System ***\n");
-            System.out.println("You are currently logged in as " + currentEmployee.getFirstName() + " " + currentEmployee.getLastName() + " with " + currentEmployee.getAccessRight().toString() + " rights!\n");
-            System.out.println("*** Select Module To Access ***");
+        while(loggedIn) {
+            System.out.println("===== Welcome to Flight Reservation System =====\n");
+            System.out.println("Current employee name: " + currentEmployee.getFirstName() + " " + currentEmployee.getLastName() + " and you HAVE " + currentEmployee.getAccessRight().toString() + " rights!\n");
+            System.out.println("===== Select Module To Access =====");
             System.out.println("1: Flight Operation Module");
-            System.out.println("2: Flight Planning Module");
-            System.out.println("3: Sales Management Module");
+            System.out.println("2: Flight Route Planning Module");
+            System.out.println("3: Sales Admin Module");
             System.out.println("4: Log Out\n");
             
             response = 0;
@@ -194,9 +194,9 @@ public class MainApp {
         System.out.print("Are you sure you want to log out? (Y or N)> ");
         String reply = sc.nextLine().trim();
         
-        if((reply.equals("Y") || reply.equals("y")) && login) {
+        if((reply.equals("Y") || reply.equals("y")) && loggedIn) {
             currentEmployee = null;
-            login = false;
+            loggedIn = false;
         }
     }
     
