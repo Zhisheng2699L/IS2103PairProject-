@@ -6,16 +6,17 @@ package holidayreservationsystemclient;
 
 /**
  *
- * @author foozh
+ * @author kahjy
  */
-public class Main {
+public class HolidayReservationSystemClient {
 
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) {
         // TODO code application logic here
-        System.out.println("hey!");
+        HolidayReservationSystemClientApp mainApp = new HolidayReservationSystemClientApp();
+        mainApp.runApp();
     }
     
 }

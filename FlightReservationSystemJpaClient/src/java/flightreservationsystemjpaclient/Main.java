@@ -4,10 +4,27 @@
  */
 package flightreservationsystemjpaclient;
 
-import ejb.session.stateless.RecordSessionBeanRemote;
-import entity.Record;
-import java.util.List;
+import ejb.session.stateless.AircraftConfigurationSessionBeanRemote;
+import ejb.session.stateless.AircraftTypeSessionBeanRemote;
+import ejb.session.stateless.AirportSessionBeanRemote;
+import ejb.session.stateless.CustomerSessionBeanRemote;
+import ejb.session.stateless.EmployeeSessionBeanRemote;
+import ejb.session.stateless.FareSessionBeanRemote;
+import ejb.session.stateless.FlightRouteSessionBeanRemote;
+import ejb.session.stateless.FlightSchedulePlanSessionBeanRemote;
+import ejb.session.stateless.FlightScheduleSessionBeanRemote;
+import ejb.session.stateless.FlightSessionBeanRemote;
+import ejb.session.stateless.ItinerarySessionBeanRemote;
+import ejb.session.stateless.PartnerSessionBeanRemote;
+import ejb.session.stateless.PassengerSessionBeanRemote;
+import ejb.session.stateless.ReservationSessionBeanRemote;
+import ejb.session.stateless.SeatsInventorySessionBeanRemote;
+import exceptions.CustomerExistException;
+import exceptions.InvalidLoginCredentialException;
+import exceptions.UnknownPersistenceException;
 import javax.ejb.EJB;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 
 /**
  *
@@ -15,22 +32,64 @@ import javax.ejb.EJB;
  */
 public class Main {
 
+     @PersistenceContext(unitName = "FlightReservationSystemJpa-ejbPU")
+    private EntityManager em;
+    
     @EJB
-    private static RecordSessionBeanRemote recordSessionBeanRemote;
+    private static EmployeeSessionBeanRemote employeeSessionBean;
+    
+    @EJB
+    private static PartnerSessionBeanRemote partnerSessionBean;
+    
+    @EJB
+    private static AircraftTypeSessionBeanRemote aircraftTypeSessionBean;
+    
+    @EJB
+    private static AirportSessionBeanRemote airportSessionBean;
+    
+    @EJB
+    private static AircraftConfigurationSessionBeanRemote aircraftConfigurationSessionBean;
+    
+    @EJB
+    private static FlightSchedulePlanSessionBeanRemote flightSchedulePlanSessionBean;
+
+    @EJB
+    private static FlightSessionBeanRemote flightSessionBean;
+
+    @EJB
+    private static FlightRouteSessionBeanRemote flightRouteSessionBean;
+    
+    @EJB
+    private static FareSessionBeanRemote fareSessionBean;
+
+    @EJB
+    private static SeatsInventorySessionBeanRemote seatsInventorySessionBean;
+
+    @EJB
+    private static FlightScheduleSessionBeanRemote flightScheduleSessionBean;
+    
+    @EJB
+    private static CustomerSessionBeanRemote customerSessionBean;
+    
+    @EJB
+    private static ItinerarySessionBeanRemote itinerarySessionBean;
+
+    @EJB
+    private static ReservationSessionBeanRemote reservationSessionBean;
+    
+    @EJB
+    private static PassengerSessionBeanRemote passengerSessionBean;
+    
+    
 
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) {
-        // TODO code application logic here
-        List<Record> retrieveAllRecords = recordSessionBeanRemote.retrieveAllRecords();
+    public static void main(String[] args) throws UnknownPersistenceException, CustomerExistException, InvalidLoginCredentialException {
         
-        for(Record record : retrieveAllRecords) {
-            
-            System.out.println(record.getRecordId() + ", " + record.getYourAss());
-        }
-        
-        
+        MainApp mainApp = new MainApp(employeeSessionBean, partnerSessionBean, aircraftTypeSessionBean, airportSessionBean, aircraftConfigurationSessionBean, flightSchedulePlanSessionBean, flightSessionBean,
+             flightRouteSessionBean, fareSessionBean, seatsInventorySessionBean, flightScheduleSessionBean, customerSessionBean, itinerarySessionBean, reservationSessionBean, passengerSessionBean);
+        mainApp.runApp();
     }
     
 }
