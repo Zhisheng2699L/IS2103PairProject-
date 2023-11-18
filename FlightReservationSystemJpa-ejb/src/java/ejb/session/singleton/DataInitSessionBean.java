@@ -45,6 +45,8 @@ public class DataInitSessionBean implements DataInitSessionBeanRemote, DataInitS
 
     @EJB
     private EmployeeSessionBeanLocal employeeSessionBean;
+    
+    
 
     public DataInitSessionBean() {
     }

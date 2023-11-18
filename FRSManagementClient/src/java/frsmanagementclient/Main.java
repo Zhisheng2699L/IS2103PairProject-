@@ -78,10 +78,16 @@ public class Main {
 
 
     public static void main(String[] args) throws UnknownPersistenceException, FlightExistException, AirportDoNotExistException, ExistingAircraftConfigException, CreateNewAircraftConfigErrorException, ExistingFlightException, ViolationConstraintsException, FlightNotFoundException, ParseException, InvalidCostException, AircraftConfigNotFoundException, FlightExistException, FlightRouteDoNotExistException, InputDataValidationException, InvalidLoginDetailsException {
+<<<<<<< Updated upstream
         MainApp mainApp = new MainApp(flightScheduleSessionBeanRemote, airportSessionBeanRemote, aircraftTypeSessionBeanRemote, cabinClassSessionBeanRemote,
                 reservationSessionBeanRemote,seatsInventorySessionBeanRemote, flightSchedulePlanSessionBeanRemote, flightSessionBeanRemote, 
+=======
+        /*MainApp mainApp = new MainApp(flightScheduleSessionBeanRemote, airportSessionBeanRemote, aircraftTypeSessionBeanRemote, cabinClassSessionBeanRemote,
+                reservationSessionBeanRemote,seatsAvailabilitySessionBeanRemote, flightSchedulePlanSessionBeanRemote, flightSessionBeanRemote, 
+>>>>>>> Stashed changes
                 flightRouteSessionBeanRemote, aircraftConfigurationSessionBeanRemote, employeeSessionBeanRemote, fareSessionBeanRemote);
-        mainApp.runApp();
+        mainApp.runApp();*/
+        System.out.println("meow");
     }
     /*FlightScheduleSessionBeanRemote flightScheduleSessionBean, AirportSessionBeanRemote airportSessionBean, 
     AircraftTypeSessionBeanRemote aircraftTypeSessionBean, CabinClassSessionBeanRemote cabinClassSessionBean, 

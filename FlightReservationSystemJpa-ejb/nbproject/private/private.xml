@@ -3,7 +3,13 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
+<<<<<<< Updated upstream
             <file>file:/C:/Users/foozh/Desktop/IS2103/IS2103pairProject/FlightReservationSystemJpa/FlightReservationSystemJpa/IS2103PairProject-/FlightReservationSystemJpa-ejb/src/conf/MANIFEST.MF</file>
+=======
+            <file>file:/C:/Users/kahjy/Desktop/NUS/y2s1/IS2103/PairProject/IS2103PairProject-/FlightReservationSystemJpa-ejb/src/java/ejb/session/singleton/DataInitSessionBean.java</file>
+            <file>file:/C:/Users/kahjy/Desktop/NUS/y2s1/IS2103/PairProject/IS2103PairProject-/FlightReservationSystemJpa-ejb/src/java/ejb/session/stateless/SeatsAvailabilitySessionBean.java</file>
+            <file>file:/C:/Users/kahjy/Desktop/NUS/y2s1/IS2103/PairProject/IS2103PairProject-/FlightReservationSystemJpa-ejb/src/java/ejb/session/singleton/TestInitSessionBean.java</file>
+>>>>>>> Stashed changes
         </group>
     </open-files>
 </project-private>

@@ -44,8 +44,12 @@ import javax.ejb.EJB;
  */
 public class MainApp {
    
+<<<<<<< Updated upstream
     private AirportSessionBeanRemote airportSessionBean;
     @EJB
+=======
+    /*private AirportSessionBeanRemote airportSessionBean;
+>>>>>>> Stashed changes
     private AircraftTypeSessionBeanRemote aircraftTypeSessionBean;
     
     @EJB
@@ -207,6 +211,6 @@ public class MainApp {
             currentEmployee = null;
             loggedIn = false;
         }
-    }
+    }*/
     
 }
