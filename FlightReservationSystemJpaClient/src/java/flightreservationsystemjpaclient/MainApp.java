@@ -87,7 +87,7 @@ public class MainApp {
     private PassengerSessionBeanRemote passengerSessionBean;
     
     private CustomerEntity currentCustomer;
-    private boolean login;
+    private boolean login = false;
     
     private final ValidatorFactory validatorFactory;
     private final Validator validator;
@@ -124,60 +124,51 @@ public class MainApp {
     
     
     public void runApp() throws UnknownPersistenceException, CustomerExistException, InvalidLoginCredentialException {
-        
-        while(true) {
-            
-            if(!login) {
-                Scanner sc = new Scanner(System.in);
-                Integer response = 0;
-                
-                System.out.println("=== Welcome to Flight Reservation System===\n");
+
+        Scanner sc = new Scanner(System.in);
+        Integer response = 0;
+
+        while (true) {
+            if (!login) {
+                System.out.println("=== Welcome to Flight Reservation System ===");
                 System.out.println("1: Customer Login");
                 System.out.println("2: Register for new Customer Account");
                 System.out.println("3: Search Flight");
                 System.out.println("4: Exit\n");
-                
-                response = 0;
-                while(response < 1 || response > 4) {
-                    System.out.print("Choose your option : ");
-                    if(response == 1) {      
-                        try{    
-                            doLogin();
-                            System.out.println("You have successfully logged into the system");
-                            login = true;   
-                        } catch (InvalidLoginCredentialException ex) {      
-                            ex.printStackTrace();
-                        } 
-                    } else if (response == 2) {
-                        try {
-                            doRegisterCustomer();
-                        } catch (Exception ex) {
-                           ex.printStackTrace();      
-                        } 
-                    } else if(response == 3) {
-                            
-                        try {
-                            searchForFlight();
-                        } catch (Exception ex) {
-                           ex.printStackTrace(); 
-                        }   
-                    } else if (response == 4) {
-                        break;
-                    } else {
-                        System.out.println("Stop playing with the buttons. Try again");
-                    } 
-                    
-                    if (response == 4) {
-                        break;
-                    } else {
-                        customerMainMenu();    
-                    }
 
+                System.out.print("Choose your option: ");
+                response = sc.nextInt();
+                sc.nextLine(); // Consume the newline left-over
+
+                if (response == 1) {
+                    try {
+                        doLogin();
+                        System.out.println("You have successfully logged into the system");
+                        login = true;
+                        customerMainMenu();
+                    } catch (InvalidLoginCredentialException ex) {
+                        System.out.println("Login failed: " + ex.getMessage());
+                    }
+                } else if (response == 2) {
+                    try {
+                        doRegisterCustomer();
+                    } catch (Exception ex) {
+                        System.out.println("Registration failed: " + ex.getMessage());
+                    }
+                } else if (response == 3) {
+                    try {
+                        searchForFlight();
+                    } catch (Exception ex) {
+                        System.out.println("Error in searching for flight: " + ex.getMessage());
+                    }
+                } else if (response == 4) {
+                    System.out.println("Thank you for using Flight Reservation System!");
+                    break; // Exit the while loop
+                } else {
+                    System.out.println("Invalid option, please try again.");
                 }
-            
             }
         }
-        
     }
             
     
