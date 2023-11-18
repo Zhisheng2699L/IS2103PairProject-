@@ -15,8 +15,8 @@ public class HolidayReservationSystemClient {
      */
     public static void main(String[] args) {
         // TODO code application logic here
-        HolidayReservationSystemClientApp mainApp = new HolidayReservationSystemClientApp();
-        mainApp.runApp();
+//        HolidayReservationSystemClientApp mainApp = new HolidayReservationSystemClientApp();
+//        mainApp.runApp();
     }
     
 }

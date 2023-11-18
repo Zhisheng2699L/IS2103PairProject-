@@ -75,7 +75,7 @@ public class PartnerSessionBean implements PartnerSessionBeanRemote, PartnerSess
         if (partner.getPassword().equals(password)) {
             return partner.getUserId();
         } else {
-            throw new InvalidLoginCredentialException("Invalid login credentials. Please try again.\n");
+            throw new InvalidLoginCredentialException("Invalid username or password. Please try again.\n");
         }
     }  
 }

@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-/*package ejb.session.ws;
+package ejb.session.ws;
 
 import pairHelper.MyPair;
 import entity.FlightScheduleEntity;
@@ -25,10 +25,12 @@ import exceptions.InputDataValidationException;
 import exceptions.InvalidLoginCredentialException;
 import exceptions.ItineraryDoNotExistException;
 import exceptions.ItineraryExistException;
+import exceptions.PartnerNotFoundException;
 import exceptions.ReservationExistException;
 import exceptions.SeatInventoryNotFoundException;
 import exceptions.UnknownPersistenceException;
-import exceptions.UpdateSeatsException;
+import exceptions.SeatAlreadyBookedException;
+import exceptions.SeatSlotNotFoundException;
 import exceptions.UserNotFoundException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -64,35 +66,38 @@ public class FlightReservationWebService {
    
     
     @WebMethod(operationName = "doLogin")
-    public long doLogin(@WebParam(name = "username") String username, @WebParam(name = "password") String password) throws InvalidLoginCredentialException {
+    public long doLogin(@WebParam(name = "username") String username, @WebParam(name = "password") String password) throws InvalidLoginCredentialException, PartnerNotFoundException {
         return partnerSessionBean.doLogin(username, password);
     }
 
     @WebMethod(operationName = "getFlightSchedules")
-    public List<FlightScheduleEntity> getFlightSchedules(@WebParam(name = "origin") String origin, 
-            @WebParam(name = "destination") String destination, 
-            @WebParam(name = "date") String date,
+    public List<FlightScheduleEntity> getFlightSchedules(@WebParam(name = "origin") String origin, @WebParam(name = "destination") String destination, @WebParam(name = "date") String date,
             @WebParam(name = "cabinclasstype") CabinClassTypeEnum cabinclasstype) throws FlightNotFoundException, ParseException {
-        SimpleDateFormat inputFormat = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy");
-        Date departureDate = inputFormat.parse(date);
+
+        Date departureDate = parseDate(date);
+        
         List<FlightScheduleEntity> res = flightScheduleSessionBean.getFlightSchedules(origin, destination, departureDate, cabinclasstype);
-        for (FlightScheduleEntity fs: res) {
-            fs.getFlightSchedulePlan().getFlight().getFlightRoute().setFlights(null);
-            fs.getFlightSchedulePlan().getFlight().getFlightRoute().setComplementaryRoute(null);
-            fs.getFlightSchedulePlan().getFlight().getFlightRoute().setOriginRoute(null);
-            fs.getFlightSchedulePlan().getFlight().setFlightSchedulePlan(null);
-            fs.getFlightSchedulePlan().getFlight().setOriginFlight(null);
-            fs.getFlightSchedulePlan().getFlight().setReturnFlight(null);
-            fs.getFlightSchedulePlan().getFlight().setAircraftConfig(null);
-            for (FareEntity fare: fs.getFlightSchedulePlan().getFares()) {
+        
+        for (FlightScheduleEntity fse: res) {
+            fse.getFlightSchedulePlan().getFlight().setFlightSchedulePlan(null);
+            fse.getFlightSchedulePlan().getFlight().getFlightRoute().setFlights(null);
+            fse.getFlightSchedulePlan().getFlight().setAircraftConfig(null);
+            fse.getFlightSchedulePlan().getFlight().getFlightRoute().setComplementaryRoute(null);
+            fse.getFlightSchedulePlan().getFlight().getFlightRoute().setOriginRoute(null);
+            fse.getFlightSchedulePlan().getFlight().setOriginFlight(null);
+            fse.getFlightSchedulePlan().getFlight().setReturnFlight(null);
+            fse.getFlightSchedulePlan().setComplementary(null);
+            fse.getFlightSchedulePlan().setOrigin(null);
+            fse.getFlightSchedulePlan().setFlightSchedule(null);
+            fse.setReservations(null);
+            
+            for (FareEntity fare: fse.getFlightSchedulePlan().getFares()) {
                 fare.setFlightSchedulePlan(null);
             }
-            fs.getFlightSchedulePlan().setComplementary(null);
-            fs.getFlightSchedulePlan().setOrigin(null);
-            fs.getFlightSchedulePlan().setFlightSchedule(null);
-            fs.setReservations(null);
-            for (SeatInventoryEntity seats: fs.getSeatInventory()) {
-                if (seats.getCabin()!= null) {seats.getCabin().setAircraftConfig(null);}
+            for (SeatInventoryEntity seats: fse.getSeatInventory()) {
+                if (seats.getCabin()!= null) {
+                    seats.getCabin().setAircraftConfig(null);
+                }
                 seats.setFlightSchedule(null);
             }
         }
@@ -110,14 +115,10 @@ public class FlightReservationWebService {
     }
     
     @WebMethod(operationName = "getIndirectFlightSchedules")
-    public List<MyPair> getIndirectFlightSchedules(@WebParam(name = "origin") String origin,
-            @WebParam(name = "destination") String destination,
-            @WebParam(name = "date") String date,
-            @WebParam(name = "cabinclasstype") CabinClassTypeEnum cabinclasstype) throws 
-            FlightNotFoundException, ParseException {
-        SimpleDateFormat inputFormat = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy");
-        Date departureDate = inputFormat.parse(date);
-        List<Pair<FlightScheduleEntity, FlightScheduleEntity>> list = flightScheduleSessionBean.getIndirectFlightSchedulesUnmanaged(origin, destination, departureDate, cabinclasstype);
+    public List<MyPair> getIndirectFlightSchedules(@WebParam(name = "origin") String origin, @WebParam(name = "destination") String destination, @WebParam(name = "date") String date,
+            @WebParam(name = "cabinclasstype") CabinClassTypeEnum cabinclasstype) throws FlightNotFoundException, ParseException {
+        Date departureDate = parseDate(date);
+        List<Pair<FlightScheduleEntity, FlightScheduleEntity>> list = flightScheduleSessionBean.getIndirectUnManagedFlightSchedules(origin, destination, departureDate, cabinclasstype);
         List<MyPair> newList = new ArrayList<>();
         for (Pair<FlightScheduleEntity, FlightScheduleEntity> pairs : list) {
             MyPair newPair = new MyPair(pairs.getKey(), pairs.getValue());
@@ -128,16 +129,16 @@ public class FlightReservationWebService {
   
             fs.getFlightSchedulePlan().getFlight().getFlightRoute().setFlights(null);
             fs.getFlightSchedulePlan().getFlight().getFlightRoute().setComplementaryRoute(null);
-            fs.getFlightSchedulePlan().getFlight().getFlightRoute().setSourceRoute(null);
+            fs.getFlightSchedulePlan().getFlight().getFlightRoute().setOriginRoute(null);
             fs.getFlightSchedulePlan().getFlight().setFlightSchedulePlan(null);
-            fs.getFlightSchedulePlan().getFlight().setSourceFlight(null);
-            fs.getFlightSchedulePlan().getFlight().setReturningFlight(null);
+            fs.getFlightSchedulePlan().getFlight().setOriginFlight(null);
+            fs.getFlightSchedulePlan().getFlight().setReturnFlight(null);
             fs.getFlightSchedulePlan().getFlight().setAircraftConfig(null);
             for (FareEntity fare: fs.getFlightSchedulePlan().getFares()) {
                 fare.setFlightSchedulePlan(null);
             }
             fs.getFlightSchedulePlan().setComplementary(null);
-            fs.getFlightSchedulePlan().setSource(null);
+            fs.getFlightSchedulePlan().setOrigin(null);
             fs.getFlightSchedulePlan().setFlightSchedule(null);
             fs.setReservations(null);
             for (SeatInventoryEntity seats: fs.getSeatInventory()) {
@@ -172,19 +173,19 @@ public class FlightReservationWebService {
     
     @WebMethod(operationName = "retrieveFlightScheduleById")
     public FlightScheduleEntity retrieveFlightScheduleById(@WebParam(name = "flightscheduleid") long flightscheduleid) throws FlightScheduleNotFoundException {
-        FlightScheduleEntity fs = flightScheduleSessionBean.retrieveFlightScheduleByIdUnmanaged(flightscheduleid);
+        FlightScheduleEntity fs = flightScheduleSessionBean.retrieveUnmanagedFlightScheduleById(flightscheduleid);
         fs.getFlightSchedulePlan().getFlight().getFlightRoute().setFlights(null);
         fs.getFlightSchedulePlan().getFlight().getFlightRoute().setComplementaryRoute(null);
-        fs.getFlightSchedulePlan().getFlight().getFlightRoute().setSourceRoute(null);
+        fs.getFlightSchedulePlan().getFlight().getFlightRoute().setOriginRoute(null);
         fs.getFlightSchedulePlan().getFlight().setFlightSchedulePlan(null);
-        fs.getFlightSchedulePlan().getFlight().setSourceFlight(null);
-        fs.getFlightSchedulePlan().getFlight().setReturningFlight(null);
+        fs.getFlightSchedulePlan().getFlight().setOriginFlight(null);
+        fs.getFlightSchedulePlan().getFlight().setReturnFlight(null);
         fs.getFlightSchedulePlan().getFlight().setAircraftConfig(null);
         for (FareEntity fare: fs.getFlightSchedulePlan().getFares()) {
             fare.setFlightSchedulePlan(null);
         }
         fs.getFlightSchedulePlan().setComplementary(null);
-        fs.getFlightSchedulePlan().setSource(null);
+        fs.getFlightSchedulePlan().setOrigin(null);
         fs.getFlightSchedulePlan().setFlightSchedule(null);
         fs.setReservations(null);
         for (SeatInventoryEntity seats: fs.getSeatInventory()) {
@@ -208,7 +209,7 @@ public class FlightReservationWebService {
     
     @WebMethod(operationName = "checkIfBooked")
     public boolean checkIfBooked(@WebParam(name = "seatinventoryentity") SeatInventoryEntity seatinventoryentity,
-            @WebParam(name = "seatnumber") String seatnumber) {
+            @WebParam(name = "seatnumber") String seatnumber) throws SeatSlotNotFoundException {
         return seatsInventorySessionBean.checkIfBooked(seatinventoryentity, seatnumber);
     }
     
@@ -222,8 +223,10 @@ public class FlightReservationWebService {
             UnknownPersistenceException,
             FlightScheduleNotFoundException,
             SeatInventoryNotFoundException,
-            UpdateSeatsException,
-            ItineraryExistException {
+            SeatAlreadyBookedException,
+            ItineraryExistException,
+            ItineraryDoNotExistException,
+            SeatSlotNotFoundException {
         return reservationSessionBean.createNewReservation(reservationentity, passengers, flightscheduleid, itineraryid);
     }
     
@@ -278,16 +281,16 @@ public class FlightReservationWebService {
             res.getFlightSchedule().setReservations(null);
             res.getFlightSchedule().getFlightSchedulePlan().getFlight().getFlightRoute().setFlights(null);
             res.getFlightSchedule().getFlightSchedulePlan().getFlight().getFlightRoute().setComplementaryRoute(null);
-            res.getFlightSchedule().getFlightSchedulePlan().getFlight().getFlightRoute().setSourceRoute(null);
+            res.getFlightSchedule().getFlightSchedulePlan().getFlight().getFlightRoute().setOriginRoute(null);
             res.getFlightSchedule().getFlightSchedulePlan().getFlight().setFlightSchedulePlan(null);
-            res.getFlightSchedule().getFlightSchedulePlan().getFlight().setSourceFlight(null);
-            res.getFlightSchedule().getFlightSchedulePlan().getFlight().setReturningFlight(null);
+            res.getFlightSchedule().getFlightSchedulePlan().getFlight().setOriginFlight(null);
+            res.getFlightSchedule().getFlightSchedulePlan().getFlight().setReturnFlight(null);
             res.getFlightSchedule().getFlightSchedulePlan().getFlight().setAircraftConfig(null);
             for (FareEntity fare: res.getFlightSchedule().getFlightSchedulePlan().getFares()) {
                 fare.setFlightSchedulePlan(null);
             }
             res.getFlightSchedule().getFlightSchedulePlan().setComplementary(null);
-            res.getFlightSchedule().getFlightSchedulePlan().setSource(null);
+            res.getFlightSchedule().getFlightSchedulePlan().setOrigin(null);
             res.getFlightSchedule().getFlightSchedulePlan().setFlightSchedule(null);
             res.getFlightSchedule().setReservations(null);
             for (SeatInventoryEntity seats: res.getFlightSchedule().getSeatInventory()) {
@@ -297,4 +300,9 @@ public class FlightReservationWebService {
         }
         return itinerary;
     }
-}*/
+    
+    private Date parseDate(String inputDateString) throws ParseException {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy");
+        return dateFormat.parse(inputDateString);
+    }
+}

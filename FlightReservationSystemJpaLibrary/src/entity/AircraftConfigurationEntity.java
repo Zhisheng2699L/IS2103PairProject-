@@ -51,6 +51,12 @@ public class AircraftConfigurationEntity implements Serializable {
     @OneToMany(mappedBy = "aircraftConfig", fetch = FetchType.EAGER, cascade = CascadeType.DETACH)
     private List<CabinClassEntity> cabin; 
 
+    public AircraftConfigurationEntity() {
+    }
+    
+    
+    
+
     public Long getAircraftConfigId() {
         return aircraftConfigId;
     }
