@@ -15,7 +15,9 @@ import ejb.session.stateless.FlightSchedulePlanSessionBeanRemote;
 import ejb.session.stateless.FlightScheduleSessionBeanRemote;
 import ejb.session.stateless.FlightSessionBeanRemote;
 import ejb.session.stateless.ReservationSessionBeanRemote;
-import ejb.session.stateless.SeatsAvailabilitySessionBeanRemote;
+import ejb.session.stateless.SeatsInventorySessionBeanRemote;
+
+
 import entity.EmployeeEntity;
 import enumeration.EmployeeAccessRightEnum;
 import exceptions.AircraftConfigNotFoundException;
@@ -34,18 +36,19 @@ import exceptions.UnknownPersistenceException;
 import exceptions.ViolationConstraintsException;
 import java.text.ParseException;
 import java.util.Scanner;
+import javax.ejb.EJB;
 
 /**
  *
  * @author kahjy
  */
 public class MainApp {
-   
+
     private AirportSessionBeanRemote airportSessionBean;
     private AircraftTypeSessionBeanRemote aircraftTypeSessionBean;
     private CabinClassSessionBeanRemote cabinClassSessionBean;
     private ReservationSessionBeanRemote reservationSessionBean;
-    private SeatsAvailabilitySessionBeanRemote seatsAvailabilitySessionBean;
+    private SeatsInventorySessionBeanRemote seatsInventorySessionBean;
     private FlightSchedulePlanSessionBeanRemote flightSchedulePlanSessionBean;
     private FlightSessionBeanRemote flightSessionBean;
     private FlightRouteSessionBeanRemote flightRouteSessionBean;
@@ -61,12 +64,12 @@ public class MainApp {
     private boolean loggedIn = false;
     private EmployeeEntity currentEmployee;
     
-    public MainApp(FlightScheduleSessionBeanRemote flightScheduleSessionBean, AirportSessionBeanRemote airportSessionBean, AircraftTypeSessionBeanRemote aircraftTypeSessionBean, CabinClassSessionBeanRemote cabinClassSessionBean, ReservationSessionBeanRemote reservationSessionBean, SeatsAvailabilitySessionBeanRemote seatsAvailabilitySessionBean, FlightSchedulePlanSessionBeanRemote flightSchedulePlanSessionBean, FlightSessionBeanRemote flightSessionBean, FlightRouteSessionBeanRemote flightRouteSessionBean, AircraftConfigurationSessionBeanRemote aircraftConfigurationSessionBean, EmployeeSessionBeanRemote employeeSessionBean, FareSessionBeanRemote fareSessionBean) {
+    public MainApp(FlightScheduleSessionBeanRemote flightScheduleSessionBean, AirportSessionBeanRemote airportSessionBean, AircraftTypeSessionBeanRemote aircraftTypeSessionBean, CabinClassSessionBeanRemote cabinClassSessionBean, ReservationSessionBeanRemote reservationSessionBean, SeatsInventorySessionBeanRemote seatsInventorySessionBean, FlightSchedulePlanSessionBeanRemote flightSchedulePlanSessionBean, FlightSessionBeanRemote flightSessionBean, FlightRouteSessionBeanRemote flightRouteSessionBean, AircraftConfigurationSessionBeanRemote aircraftConfigurationSessionBean, EmployeeSessionBeanRemote employeeSessionBean, FareSessionBeanRemote fareSessionBean) {
         this.airportSessionBean = airportSessionBean;
         this.aircraftTypeSessionBean = aircraftTypeSessionBean;
         this.cabinClassSessionBean = cabinClassSessionBean;
         this.reservationSessionBean = reservationSessionBean;
-        this.seatsAvailabilitySessionBean = seatsAvailabilitySessionBean;
+        this.seatsInventorySessionBean = seatsInventorySessionBean;
         this.flightSchedulePlanSessionBean = flightSchedulePlanSessionBean;
         this.flightSessionBean = flightSessionBean;
         this.flightRouteSessionBean = flightRouteSessionBean;
@@ -99,7 +102,7 @@ public class MainApp {
                             
                             flightRoutePlanningModule = new FlightRoutePlanningModule(currentEmployee, airportSessionBean, aircraftConfigurationSessionBean, aircraftTypeSessionBean, cabinClassSessionBean, flightRouteSessionBean);
 
-                            salesAdminModule = new SalesAdminModule(currentEmployee, seatsAvailabilitySessionBean, reservationSessionBean, flightSessionBean);
+                            salesAdminModule = new SalesAdminModule(currentEmployee, seatsInventorySessionBean, reservationSessionBean, flightSessionBean);
                             mainMenu();
                         } catch (InvalidLoginCredentialException ex) {
                             System.out.println(ex.getMessage());

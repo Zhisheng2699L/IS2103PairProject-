@@ -49,7 +49,7 @@ public class FlightSchedulePlanSessionBean implements FlightSchedulePlanSessionB
     private EntityManager em;
     
     @EJB
-    private SeatsAvailabilitySessionBeanLocal seatsAvailabilitySessionBean;
+    private SeatsInventorySessionBeanLocal SeatsInventorySessionBean;
     @EJB
     private FareSessionBeanLocal fareSessionBean;
     @EJB
@@ -98,7 +98,7 @@ public class FlightSchedulePlanSessionBean implements FlightSchedulePlanSessionB
                 for (FlightScheduleEntity fse : plan.getFlightSchedule()) {
                     for (CabinClassEntity cc : plan.getFlight().getAircraftConfig().getCabin()) {
                         SeatInventoryEntity seats = new SeatInventoryEntity(cc.getMaxSeatCapacity(), 0, cc.getMaxSeatCapacity());
-                        seatsAvailabilitySessionBean.createSeatInventory(seats, fse, cc);
+                        SeatsInventorySessionBean.createSeatInventory(seats, fse, cc);
                     }
                 }
 
@@ -166,7 +166,7 @@ public class FlightSchedulePlanSessionBean implements FlightSchedulePlanSessionB
                 for (FlightScheduleEntity flightSchedule : plan.getFlightSchedule()) {
                     for (CabinClassEntity cc : plan.getFlight().getAircraftConfig().getCabin()) {
                         SeatInventoryEntity seats = new SeatInventoryEntity(cc.getMaxSeatCapacity(), 0, cc.getMaxSeatCapacity());
-                        seatsAvailabilitySessionBean.createSeatInventory(seats, flightSchedule, cc);
+                        SeatsInventorySessionBean.createSeatInventory(seats, flightSchedule, cc);
                     }
                 }
 
@@ -286,7 +286,7 @@ public class FlightSchedulePlanSessionBean implements FlightSchedulePlanSessionB
                 for (FlightScheduleEntity flightSchedule : plan.getFlightSchedule()) {
                     for (CabinClassEntity cabinClass : plan.getFlight().getAircraftConfig().getCabin()) {
                         SeatInventoryEntity seats = new SeatInventoryEntity(cabinClass.getMaxSeatCapacity(), 0, cabinClass.getMaxSeatCapacity());
-                        seatsAvailabilitySessionBean.createSeatInventory(seats, flightSchedule, cabinClass);
+                        SeatsInventorySessionBean.createSeatInventory(seats, flightSchedule, cabinClass);
                     }
                 }
 
