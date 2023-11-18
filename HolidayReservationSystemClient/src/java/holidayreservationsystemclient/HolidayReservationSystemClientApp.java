@@ -90,7 +90,7 @@ import java.util.Scanner;
                     System.out.println("Log out successful. Do come again! \n");
                     break;
                 } else {
-                    System.out.println("Invalid Option, please try again!");
+                    System.out.println("Invalid input, please try again!");
                 }
             }
             if (response == 5) {

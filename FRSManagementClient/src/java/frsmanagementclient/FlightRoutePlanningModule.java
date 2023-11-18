@@ -120,7 +120,7 @@ public class FlightRoutePlanningModule {
                 } else if(response == 4) {
                     break;
                 } else {
-                    System.out.println("Invalid option, please try again!\n");
+                    System.out.println("Invalid input, please try again with 1/2/3/4!\n");
                 }
             }
             
@@ -368,7 +368,7 @@ public class FlightRoutePlanningModule {
             if (choice >= min && choice <= max) {
                 return choice;
             } else {
-                System.out.println("Invalid option, please try again!\n");
+                System.out.println("Invalid input, please try again!\n");
             }
         }
     }
@@ -540,7 +540,7 @@ public class FlightRoutePlanningModule {
             System.out.printf("%20s%35s%20s%35s%25s\n", route.getFlightRouteId().toString(), route.getOrigin().getAirportName() ,route.getOrigin().getIATACode(), route.getDestination().getAirportName() ,route.getDestination().getIATACode());
         }
         
-        System.out.print("Select flight route to delete (By ID)> ");
+        System.out.print("Select flight route to delete (By Id): ");
         long id = sc.nextLong();
         
         try {

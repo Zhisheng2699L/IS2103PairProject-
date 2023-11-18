@@ -85,7 +85,7 @@ public class MainApp {
                 Scanner sc = new Scanner(System.in);
                 Integer response = 0;
                 
-                System.out.println("=== Welcome to Merlion Flight Reservation System (Management)===\n");
+                System.out.println("===== Welcome to Flight Reservation Management System =====\n");
                 System.out.println("1: Login");
                 System.out.println("2: Exit\n");
                 
@@ -111,7 +111,7 @@ public class MainApp {
                     } else if (response == 2) {
                         break;
                     } else {
-                        System.out.println("Invalid input, please try again!\n");
+                        System.out.println("Invalid ID or Password, please try again!\n");
                     }
                 }
                 if(response == 2) {
@@ -125,17 +125,16 @@ public class MainApp {
     
     private void doLogin() throws InvalidLoginCredentialException, InvalidLoginDetailsException {
         Scanner sc = new Scanner(System.in) ;
-        System.out.println("*** Merlion Flight Reservation System :: LOGIN ***\n");
-        System.out.print("Enter username> ");
+        System.out.println("===== Flight Reservation System: LOGIN =====\n");
+        System.out.print("Enter username: ");
         String username = sc.nextLine().trim();
-        System.out.print("Enter password> ");
+        System.out.print("Enter password: ");
         String password = sc.nextLine().trim();
         
-        if(username.length() > 0 && password.length() > 0) {
+        try {
             currentEmployee = employeeSessionBean.tryLogin(username, password);
-            //loggedIn = true;
-        } else {
-            throw new InvalidLoginCredentialException("Missing Login Credentials");
+        } catch (InvalidLoginDetailsException ex) {
+            System.out.println("Login failed: " + ex.getMessage() + ". Please try again!");
         }
     }
     
@@ -145,8 +144,8 @@ public class MainApp {
         
         while(loggedIn) {
             System.out.println("===== Welcome to Flight Reservation System =====\n");
-            System.out.println("Current employee name: " + currentEmployee.getFirstName() + " " + currentEmployee.getLastName() + " and you HAVE " + currentEmployee.getAccessRight().toString() + " rights!\n");
-            System.out.println("===== Select Module To Access =====");
+            System.out.println("You are: " + currentEmployee.getFirstName() + " " + currentEmployee.getLastName() + ". Current rights are: " + currentEmployee.getAccessRight().toString() + "\n");
+            System.out.println("===== Choose a Module To Access =====");
             System.out.println("1: Flight Operation Module");
             System.out.println("2: Flight Route Planning Module");
             System.out.println("3: Sales Admin Module");
@@ -161,27 +160,27 @@ public class MainApp {
                     if(currentEmployee.getAccessRight().equals(EmployeeAccessRightEnum.ADMINISTRATOR) || currentEmployee.getAccessRight().equals(EmployeeAccessRightEnum.SCHEDULEMANAGER)) {
                         flightOperationModule.mainMenu();
                     } else {
-                        System.out.println("You are not authorised to use this feature.");
+                        System.out.println("Invalid EmployeeAccessRight, make sure you're an Administrator or Schedule Manager!");
                     }
                 } else if(response == 2) {
                     if(currentEmployee.getAccessRight().equals(EmployeeAccessRightEnum.ADMINISTRATOR) || currentEmployee.getAccessRight().equals(EmployeeAccessRightEnum.FLEETMANAGER) || currentEmployee.getAccessRight().equals(EmployeeAccessRightEnum.ROUTEPLANNER)) {
                         flightRoutePlanningModule.mainMenu();
                     }else {
-                        System.out.println("You are not authorised to use this feature.");
+                        System.out.println("Invalid EmployeeAccessRight, make sure you're an Administrator or Route Planner!");
                     }
                     
                 } else if (response == 3) {
                     if(currentEmployee.getAccessRight().equals(EmployeeAccessRightEnum.ADMINISTRATOR) || currentEmployee.getAccessRight().equals(EmployeeAccessRightEnum.SALESMANAGER)) {
                         salesAdminModule.mainMenu();
                     }else {
-                        System.out.println("You are not authorised to use this feature.");
+                        System.out.println("Invalid EmployeeAccessRight, make sure you're an Administrator or Sales Manager!");
                     }
                 } else if (response == 4) {
                     doLogOut();
-                    System.out.println("Log out successful.\n");
+                    System.out.println("You have been logged out.\n");
                     break;
                 } else {
-                    System.out.println("Invalid Option, please try again!");
+                    System.out.println("Invalid input, please try again with 1/2/3!");
                 }
             }
             
@@ -193,13 +192,12 @@ public class MainApp {
     
     private void doLogOut() {
         Scanner sc = new Scanner(System.in);
-        
         System.out.print("Are you sure you want to log out? (Y or N)> ");
-        String reply = sc.nextLine().trim();
+        String response = sc.nextLine().trim();
         
-        if((reply.equals("Y") || reply.equals("y")) && loggedIn) {
-            currentEmployee = null;
+        if(response.equalsIgnoreCase("Y") && loggedIn) {
             loggedIn = false;
+            currentEmployee = null;
         }
     }
     

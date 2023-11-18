@@ -112,7 +112,7 @@ public class MainApp {
                 Scanner sc = new Scanner(System.in);
                 Integer response = 0;
                 
-                System.out.println("=== Welcome to Merlion Airlines Flight Reservation System===\n");
+                System.out.println("=== Welcome to Flight Reservation System===\n");
                 System.out.println("1: Customer Login");
                 System.out.println("2: Register for new Customer Account");
                 System.out.println("3: Search Flight");
@@ -226,7 +226,7 @@ public class MainApp {
         Scanner sc = new Scanner(System.in);
         int response = 0;
         while (login) {
-            System.out.println("*** Welcome to Merlion Airlines Reservation Client ***\n");
+            System.out.println("*** Welcome to Airlines Reservation Client ***\n");
             System.out.println("You are currently logged in as " + currentCustomer.getFirstName() + " " + currentCustomer.getLastName() + "!\n");
             System.out.println();
             System.out.println("*** These are the functions you have access to ***");

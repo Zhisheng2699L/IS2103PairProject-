@@ -347,21 +347,21 @@ public class FlightOperationModule {
             List<FlightRouteEntity> routes = flightRouteSessionBean.retrieveAllFlightRouteInOrder();
             List<AircraftConfigurationEntity> aircraftConfig = aircraftConfigurationSessionBean.retrieveAllConfiguration();
 
-            System.out.printf("%20s%40s%20s%40s%25s\n", "Flight Route ID", "Origin Airport Name", "Origin Airport IATA", "Destination Airport Name", "Destination Airport IATA");
-            for (FlightRouteEntity rte : routes) {
-                System.out.printf("%20s%40s%20s%40s%25s\n", rte.getFlightRouteId().toString(), rte.getOrigin().getAirportName(), rte.getOrigin().getIATACode(), rte.getDestination().getAirportName(), rte.getDestination().getIATACode());
+            System.out.printf("%20s%35s%20s%45s%25s\n", "Flight Route ID", "Origin Airport Name", "Origin Airport IATA", "Destination Airport Name", "Destination Airport IATA");
+            for (FlightRouteEntity re : routes) {
+                System.out.printf("%20s%35s%20s%45s%25s\n", re.getFlightRouteId().toString(), re.getOrigin().getAirportName(), re.getOrigin().getIATACode(), re.getDestination().getAirportName(), re.getDestination().getIATACode());
             }
 
-            System.out.print("Enter Flight Route (BY ID)(negative number if no change)>  ");
+            System.out.print("Enter Flight Route (By Id)(negative number if no change)>  ");
             Long chosenRoute = sc.nextLong();
             sc.nextLine();
 
-            System.out.printf("%30s%40s%25s%30s\n", "Aircraft Configuration ID", "Name", "Number of Cabin Class", "Aircraft Type");
+            System.out.printf("%20s%35s%20s%30s\n", "Aircraft Configuration ID", "Name", "Number of Cabin Class", "Aircraft Type");
             for (AircraftConfigurationEntity config : aircraftConfig) {
-                System.out.printf("%30s%40s%25s%30s\n", config.getAircraftConfigId().toString(), config.getName(), config.getNumberOfCabinClasses(), config.getAircraftType().getAircraftTypeName());
+                System.out.printf("%20s%40s%20s%30s\n", config.getAircraftConfigId().toString(), config.getName(), config.getNumberOfCabinClasses(), config.getAircraftType().getAircraftTypeName());
             }
 
-            System.out.print("Enter Aircraft Configuration (BY ID)(negative number if no change)>  ");
+            System.out.print("Enter Aircraft Configuration (By Id)(negative number if no change)>  ");
             Long chosenConfig = sc.nextLong();
             sc.nextLine();
 
@@ -370,14 +370,14 @@ public class FlightOperationModule {
             boolean display = list.stream().anyMatch(returnFlight -> returnFlight.getOriginFlight()== null && !returnFlight.getFlightId().equals(flight.getFlightId()));
 
             if (display) {
-                System.out.printf("%10s%20s%20s%40s\n", "Flight ID", "Flight Number", "Flight Route", "Aircraft Configuration");
+                System.out.printf("%10s%15s%20s%35s\n", "Flight Id", "Flight Number", "Flight Route", "Aircraft Configuration");
                 list.stream()
                     .filter(returnFlight -> returnFlight.getOriginFlight()== null && !returnFlight.getFlightId().equals(flight.getFlightId()))
                     .forEach(returnFlight -> {
-                        System.out.printf("%10s%20s%20s%40s\n", returnFlight.getFlightId(), returnFlight.getFlightNum(), returnFlight.getFlightRoute().getOrigin().getIATACode() + " -> " + returnFlight.getFlightRoute().getDestination().getIATACode(), returnFlight.getAircraftConfig().getName());
+                        System.out.printf("%10s%15s%20s%35s\n", returnFlight.getFlightId(), returnFlight.getFlightNum(), returnFlight.getFlightRoute().getOrigin().getIATACode() + " -> " + returnFlight.getFlightRoute().getDestination().getIATACode(), returnFlight.getAircraftConfig().getName());
                     });
 
-                System.out.print("Enter return flight to associate (BY ID)(negative number if no change or none)>  ");
+                System.out.print("Enter return flight to associate (By Id)(negative number if no change or none):  ");
                 Long chosenReturnFlight = sc.nextLong();
                 sc.nextLine();
 
@@ -416,18 +416,18 @@ public class FlightOperationModule {
                 prepareInputDataValidationErrorsMessage(constraintViolations);
             }
         } catch (FlightRouteDoNotExistException | AircraftConfigNotFoundException ex) {
-            System.out.println("Error: " + ex.getMessage() + "\nPlease create the required items first!\n");
+            System.out.println("Error: " + ex.getMessage() + "! Please try again! \n");
         } catch (FlightNotFoundException ex) {
-            System.out.println("Error: Flight not found - " + ex.getMessage() + "\nPlease try again!\n");
+            System.out.println("Error: Flight not found: " + ex.getMessage() + "\nPlease try again!\n");
         } catch (UnknownPersistenceException ex) {
-            System.out.println("Error: Unknown Persistence Exception - " + ex.getMessage() + "\nPlease try again!\n");
+            System.out.println("Error: Unknown Persistence Exception: " + ex.getMessage() + "\nPlease try again!\n");
         }
     }
     
     private void deleteFlight(FlightEntity flight) {
         Scanner sc = new Scanner(System.in);
         System.out.println("===== Delete Flight =====");
-        System.out.printf("Confirm delete flight %s (Flight ID: %d) (Enter Y/N)> ", flight.getFlightNum(), flight.getFlightId());
+        System.out.printf("Confirm to delete flight %s (Flight ID: %d)? (Enter Y/N)> ", flight.getFlightNum(), flight.getFlightId());
         String reply = sc.nextLine().trim();
         
         if(reply.equalsIgnoreCase("Y")) {
@@ -468,7 +468,7 @@ public class FlightOperationModule {
                 } else if (response == 4) {
                     break;
                 } else {
-                    System.out.println("Invalid option, please try again!\n");
+                    System.out.println("Invalid input, please try again with 1/2/3/4!\n");
                 }
             }
             if (response == 4) {
@@ -571,19 +571,18 @@ public class FlightOperationModule {
         double duration;
         
         Scanner sc = new Scanner(System.in);
-        SimpleDateFormat formatter = new SimpleDateFormat("dd/M/yyyy hh:mm:ss a");
-        SimpleDateFormat outputFormatter = new SimpleDateFormat("dd/M/yyyy hh:mm:ss a");
+        SimpleDateFormat dateFormatter = new SimpleDateFormat("dd/M/yyyy hh:mm:ss a");
         
         System.out.print("Enter departure Date and Time (dd/mm/yyyy hh:mm:ss AM/PM): ");
         String input = sc.nextLine().trim();
-        departure = formatter.parse(input);
+        departure = dateFormatter.parse(input);
         System.out.print("Enter estimated flight duration (HOURS): ");
         duration = sc.nextDouble();
         return new Pair<>(departure, duration);
     }
     
     private int getNumberOfSchedulesToCreate(Scanner sc) {
-        System.out.print("Enter number of schedule to be created> ");
+        System.out.print("Enter number of schedule to be created: ");
         return sc.nextInt();
     }
     
@@ -798,7 +797,7 @@ public class FlightOperationModule {
     /*============================ START OF updateFlightSchedule in updateFlightSchedulePlan  ==================================*/
     private void updateFlightSchedule(FlightSchedulePlanEntity plan) throws java.text.ParseException {
         Scanner sc = new Scanner(System.in);
-        SimpleDateFormat formatter = new SimpleDateFormat("dd/M/yyyy hh:mm:ss a");
+        SimpleDateFormat dateFormatter = new SimpleDateFormat("dd/M/yyyy hh:mm:ss a");
 
         System.out.printf("%30s%30s%20s\n", "Flight Schedule ID", "Departure Date Time", "Duration");
 
@@ -823,7 +822,7 @@ public class FlightOperationModule {
             try {
                 System.out.print("Enter new departure Date and Time (dd/mm/yyyy hh:mm:ss AM/PM)> ");
                 String input = sc.nextLine().trim();
-                Date departure = formatter.parse(input);
+                Date departure = dateFormatter.parse(input);
 
                 System.out.print("Enter new estimated flight duration (HRS)> ");
                 double duration = sc.nextDouble();
