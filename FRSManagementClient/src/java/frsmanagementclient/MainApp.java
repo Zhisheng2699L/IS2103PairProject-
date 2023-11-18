@@ -43,21 +43,11 @@ import javax.ejb.EJB;
  * @author kahjy
  */
 public class MainApp {
-   
-<<<<<<< Updated upstream
+
     private AirportSessionBeanRemote airportSessionBean;
-    @EJB
-=======
-    /*private AirportSessionBeanRemote airportSessionBean;
->>>>>>> Stashed changes
     private AircraftTypeSessionBeanRemote aircraftTypeSessionBean;
-    
-    @EJB
     private CabinClassSessionBeanRemote cabinClassSessionBean;
-    @EJB 
     private ReservationSessionBeanRemote reservationSessionBean;
-    
-    @EJB
     private SeatsInventorySessionBeanRemote seatsInventorySessionBean;
     private FlightSchedulePlanSessionBeanRemote flightSchedulePlanSessionBean;
     private FlightSessionBeanRemote flightSessionBean;
@@ -211,6 +201,6 @@ public class MainApp {
             currentEmployee = null;
             loggedIn = false;
         }
-    }*/
+    }
     
 }

@@ -4,13 +4,9 @@
  */
 package ejb.session.stateless;
 
-import entity.CabinClassEntity;
-import entity.FlightScheduleEntity;
 import entity.SeatInventoryEntity;
 import exceptions.SeatAlreadyBookedException;
 import exceptions.SeatSlotNotFoundException;
-import exceptions.ViolationConstraintsException;
-import java.util.List;
 import javax.ejb.Remote;
 
 /**
@@ -20,12 +16,12 @@ import javax.ejb.Remote;
 @Remote
 public interface SeatsInventorySessionBeanRemote {
     
-    public SeatInventoryEntity createSeatInventory(SeatInventoryEntity seatInventory,
+    /*public SeatInventoryEntity createSeatInventory(SeatInventoryEntity seatInventory,
 FlightScheduleEntity flightSchedule, CabinClassEntity cabinClass) throws ViolationConstraintsException;
 
     public SeatInventoryEntity retrieveSeatsById(Long seatInventoryID) throws SeatSlotNotFoundException;
 
-    public void deleteSeatInventory(List<SeatInventoryEntity> seats);
+    public void deleteSeatInventory(List<SeatInventoryEntity> seats);*/
 
     public void bookSeat(long seatInventoryId, String seatNumber) throws SeatAlreadyBookedException, SeatSlotNotFoundException;
 

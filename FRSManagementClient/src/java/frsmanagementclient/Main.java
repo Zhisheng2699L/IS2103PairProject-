@@ -38,56 +38,47 @@ import javax.ejb.EJB;
  */
 public class Main {
 
-    @EJB
-    private static  SeatsInventorySessionBeanRemote seatsInventorySessionBeanRemote;
+    @EJB(name = "FlightSessionBeanRemote")
+    private static FlightSessionBeanRemote flightSessionBean;
 
-    @EJB
-    private static ReservationSessionBeanRemote reservationSessionBeanRemote;
+    @EJB(name = "FareSessionBeanRemote")
+    private static FareSessionBeanRemote fareSessionBean;
 
-    @EJB
-    private static FlightSessionBeanRemote flightSessionBeanRemote;
+    @EJB(name = "EmployeeSessionBeanRemote")
+    private static EmployeeSessionBeanRemote employeeSessionBean;
 
-    @EJB
-    private static FlightScheduleSessionBeanRemote flightScheduleSessionBeanRemote;
+    @EJB(name = "AircraftConfigurationSessionBeanRemote")
+    private static AircraftConfigurationSessionBeanRemote aircraftConfigurationSessionBean;
 
-    @EJB
-    private static FlightSchedulePlanSessionBeanRemote flightSchedulePlanSessionBeanRemote;
+    @EJB(name = "FlightRouteSessionBeanRemote")
+    private static FlightRouteSessionBeanRemote flightRouteSessionBean;
 
-    @EJB
-    private static FlightRouteSessionBeanRemote flightRouteSessionBeanRemote;
+    @EJB(name = "FlightSchedulePlanSessionBeanRemote")
+    private static FlightSchedulePlanSessionBeanRemote flightSchedulePlanSessionBean;
 
-    @EJB
-    private static FareSessionBeanRemote fareSessionBeanRemote;
+    @EJB(name = "SeatsInventorySessionBeanRemote")
+    private static SeatsInventorySessionBeanRemote seatsInventorySessionBean;
 
-    @EJB
-    private static EmployeeSessionBeanRemote employeeSessionBeanRemote;
+    @EJB(name = "ReservationSessionBeanRemote")
+    private static ReservationSessionBeanRemote reservationSessionBean;
 
-    @EJB
-    private static CabinClassSessionBeanRemote cabinClassSessionBeanRemote;
+    @EJB(name = "CabinClassSessionBeanRemote")
+    private static CabinClassSessionBeanRemote cabinClassSessionBean;
 
-    @EJB
-    private static AirportSessionBeanRemote airportSessionBeanRemote;
+    @EJB(name = "AircraftTypeSessionBeanRemote")
+    private static AircraftTypeSessionBeanRemote aircraftTypeSessionBean;
 
-    @EJB
-    private static AircraftTypeSessionBeanRemote aircraftTypeSessionBeanRemote;
+    @EJB(name = "AirportSessionBeanRemote")
+    private static AirportSessionBeanRemote airportSessionBean;
 
-    @EJB
-    private static AircraftConfigurationSessionBeanRemote aircraftConfigurationSessionBeanRemote;
+    @EJB(name = "FlightScheduleSessionBeanRemote")
+    private static FlightScheduleSessionBeanRemote flightScheduleSessionBean;   
 
-    
-
-
-    public static void main(String[] args) throws UnknownPersistenceException, FlightExistException, AirportDoNotExistException, ExistingAircraftConfigException, CreateNewAircraftConfigErrorException, ExistingFlightException, ViolationConstraintsException, FlightNotFoundException, ParseException, InvalidCostException, AircraftConfigNotFoundException, FlightExistException, FlightRouteDoNotExistException, InputDataValidationException, InvalidLoginDetailsException {
-<<<<<<< Updated upstream
-        MainApp mainApp = new MainApp(flightScheduleSessionBeanRemote, airportSessionBeanRemote, aircraftTypeSessionBeanRemote, cabinClassSessionBeanRemote,
-                reservationSessionBeanRemote,seatsInventorySessionBeanRemote, flightSchedulePlanSessionBeanRemote, flightSessionBeanRemote, 
-=======
-        /*MainApp mainApp = new MainApp(flightScheduleSessionBeanRemote, airportSessionBeanRemote, aircraftTypeSessionBeanRemote, cabinClassSessionBeanRemote,
-                reservationSessionBeanRemote,seatsAvailabilitySessionBeanRemote, flightSchedulePlanSessionBeanRemote, flightSessionBeanRemote, 
->>>>>>> Stashed changes
-                flightRouteSessionBeanRemote, aircraftConfigurationSessionBeanRemote, employeeSessionBeanRemote, fareSessionBeanRemote);
-        mainApp.runApp();*/
-        System.out.println("meow");
+    public static void main(String[] args) throws UnknownPersistenceException, AirportDoNotExistException, ExistingAircraftConfigException, CreateNewAircraftConfigErrorException, ExistingFlightException, FlightNotFoundException, ViolationConstraintsException, ParseException, InvalidCostException, AircraftConfigNotFoundException, FlightExistException, InputDataValidationException, FlightRouteDoNotExistException, InvalidLoginDetailsException {
+        MainApp mainApp = new MainApp(flightScheduleSessionBean, airportSessionBean, aircraftTypeSessionBean, cabinClassSessionBean,reservationSessionBean,
+                seatsInventorySessionBean, flightSchedulePlanSessionBean, flightSessionBean, flightRouteSessionBean, 
+                aircraftConfigurationSessionBean, employeeSessionBean, fareSessionBean);
+        mainApp.runApp();
     }
     /*FlightScheduleSessionBeanRemote flightScheduleSessionBean, AirportSessionBeanRemote airportSessionBean, 
     AircraftTypeSessionBeanRemote aircraftTypeSessionBean, CabinClassSessionBeanRemote cabinClassSessionBean, 
