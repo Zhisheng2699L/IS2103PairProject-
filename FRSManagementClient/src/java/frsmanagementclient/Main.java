@@ -40,7 +40,7 @@ public class Main {
 
     @EJB(name = "FlightSessionBeanRemote")
     private static FlightSessionBeanRemote flightSessionBean;
-    
+
     @EJB(name = "FareSessionBeanRemote")
     private static FareSessionBeanRemote fareSessionBean;
 

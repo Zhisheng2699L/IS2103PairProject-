@@ -45,8 +45,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.regex.Pattern;
 import javax.ejb.EJB;
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
 
 
 /**
@@ -54,50 +59,21 @@ import javax.ejb.EJB;
  * @author foozh
  */
 public class MainApp {
-    
-    @EJB
-    private static EmployeeSessionBeanRemote employeeSessionBean;
 
-    @EJB
-    private static PartnerSessionBeanRemote partnerSessionBean;
-
-    @EJB
-    private static AircraftTypeSessionBeanRemote aircraftTypeSessionBean;
-
-    @EJB
-    private static AirportSessionBeanRemote airportSessionBean;
-
-    @EJB
-    private static AircraftConfigurationSessionBeanRemote aircraftConfigurationSessionBean;
-
-    @EJB
-    private static FlightSchedulePlanSessionBeanRemote flightSchedulePlanSessionBean;
-
-    @EJB
-    private static FlightSessionBeanRemote flightSessionBean;
-
-    @EJB
-    private static  FlightRouteSessionBeanRemote flightRouteSessionBean;
-
-    @EJB
-    private static FareSessionBeanRemote fareSessionBean;
-
-    @EJB
-    private static SeatsInventorySessionBeanRemote seatsInventorySessionBean;
-
-    @EJB
-    private static FlightScheduleSessionBeanRemote flightScheduleSessionBean;
-
-    @EJB
-    private static  CustomerSessionBeanRemote customerSessionBean;
-
-    @EJB
-    private static ItinerarySessionBeanRemote itinerarySessionBean;
-
-    @EJB
-    private static ReservationSessionBeanRemote reservationSessionBean;
-
-    @EJB
+    private EmployeeSessionBeanRemote employeeSessionBean;
+    private PartnerSessionBeanRemote partnerSessionBean;
+    private AircraftTypeSessionBeanRemote aircraftTypeSessionBean;
+    private AirportSessionBeanRemote airportSessionBean;
+    private AircraftConfigurationSessionBeanRemote aircraftConfigurationSessionBean;
+    private FlightSchedulePlanSessionBeanRemote flightSchedulePlanSessionBean;
+    private FlightSessionBeanRemote flightSessionBean;
+    private FlightRouteSessionBeanRemote flightRouteSessionBean;
+    private FareSessionBeanRemote fareSessionBean;
+    private SeatsInventorySessionBeanRemote seatsInventorySessionBean;
+    private FlightScheduleSessionBeanRemote flightScheduleSessionBean;
+    private CustomerSessionBeanRemote customerSessionBean;
+    private ItinerarySessionBeanRemote itinerarySessionBean;
+    private ReservationSessionBeanRemote reservationSessionBean;
     private PassengerSessionBeanRemote passengerSessionBean;
     
     private CustomerEntity currentCustomer;

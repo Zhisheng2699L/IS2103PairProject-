@@ -23,17 +23,12 @@ import exceptions.CustomerExistException;
 import exceptions.InvalidLoginCredentialException;
 import exceptions.UnknownPersistenceException;
 import javax.ejb.EJB;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 
 /**
  *
  * @author foozh
  */
 public class Main {
-
-     @PersistenceContext(unitName = "FlightReservationSystemJpa-ejbPU")
-    private EntityManager em;
     
     @EJB
     private static EmployeeSessionBeanRemote employeeSessionBean;
