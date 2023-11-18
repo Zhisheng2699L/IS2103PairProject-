@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Main.java to edit this template
  */
-/*package holidayreservationsystemclient;
+package holidayreservationsystemclient;
 
 import entity.SeatInventoryEntity;
 import enumeration.CabinClassTypeEnum;
@@ -25,7 +25,7 @@ import java.util.Scanner;
  *
  * @author kahjy
  */
-/*public class HolidayReservationSystemClientApp {
+public class HolidayReservationSystemClientApp {
 
     boolean loggedIn;
     Long currentPartner;
@@ -111,7 +111,7 @@ import java.util.Scanner;
         }
     }
      /* ------------------------ START OF doSearchFlight() ------------------------------ */   
-    /*private void doSearchFlight() {
+    private void doSearchFlight() {
         Scanner sc = new Scanner (System.in);
         SimpleDateFormat inputFormat = new SimpleDateFormat("dd/M/yyyy");
         
@@ -504,7 +504,7 @@ import java.util.Scanner;
             int diff = flightScheduleEntity.getFlightSchedulePlan().getFlight().getFlightRoute().getDestination().getGmt()
                     - flightScheduleEntity.getFlightSchedulePlan().getFlight().getFlightRoute().getOrigin().getGmt();
             Calendar c2 = Calendar.getInstance();
-            c2.setTime(flightScheduleEntity.getDepartureDateTime().toGregorianCalendar().getTime());
+            c2.setTime(flightScheduleEntity.getDepartureDateTime());
             double duration = flightScheduleEntity.getDuration();
             int hour = (int) duration;
             int min = (int) (duration % 1 * 60);
@@ -542,9 +542,9 @@ import java.util.Scanner;
             }
         }
     }
-    */
+    
     /* ------------------------ END OF doSearchFlight() ------------------------------ */
-   /* 
+    
     private static Long doLogin(java.lang.String username, java.lang.String password) throws InvalidLoginCredentialException {
         ejb.session.ws.FlightReservationWebService_Service service = new ejb.session.ws.FlightReservationWebService_Service();
         ejb.session.ws.FlightReservationWebService port = service.getFlightReservationWebServicePort();
